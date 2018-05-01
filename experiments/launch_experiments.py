@@ -73,8 +73,8 @@ def do_full_experiment(parameters):
     subprocess.call(["cp", parameters["tpl"], outdir+"/"])
     write_hyperparameters(hyperparameters, parameters["hyper"])
     
-    trainer="../../bin/mtg2_trainer"
-    parser ="../../bin/mtg2_parser"
+    trainer="../bin/mtg2_trainer"
+    parser ="../bin/mtg2_parser"
     
     options="-F 1 -b 1 -t {train} -d {dev} -i {i} -f {tpl} -o {out} -N {hyper} {transitionsystem}".format(
                 train = parameters["datadir"] + "/{}/train.ctbk".format(parameters["language"]),
