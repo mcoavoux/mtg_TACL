@@ -6,6 +6,7 @@ import subprocess
 from joblib import Parallel, delayed
 import random
 import sys
+import glob
 
 def unix(command) :
     print(command)
@@ -93,53 +94,12 @@ def do_full_experiment(parameters):
     beam = parameters["beamsize"]
     
     while beam > 0 :
-        
-        for corpus in ["dev", "test"] :
-            
-            pred_file = "{}/pred_{}b{}.discbracket".format(outdir, corpus, beam)
-            
-            command="{parser} -F 1 -x {data} -b {b} -o {out} -m {model} 2> {log}".format(
-                    parser = parser,
-                    data = parameters["datadir"] + "/{}/{}.raw".format(parameters["language"], corpus),
-                    b = beam,
-                    out = pred_file,
-                    model = outdir,
-                    log = "{}/parse_log_{}_b{}".format(outdir, corpus, beam))
-            unix(command)
-            
-            unix("discodop eval {gold} {pred} spmrl.prm --fmt=discbracket > {res}".format(
-                    gold="{}/{}/{}.discbracket".format(parameters["datadir"], parameters["language"], corpus), 
-                    pred=pred_file,
-                    res = "{}/eval_sp_{}_b{}_it{}".format(outdir, corpus, beam, parameters["iterations"])))
-
-            unix("discodop eval {gold} {pred} proper.prm --fmt=discbracket > {res}".format(
-                    gold="{}/{}/{}.discbracket".format(parameters["datadir"], parameters["language"], corpus), 
-                    pred=pred_file,
-                    res = "{}/eval_pr_{}_b{}_it{}".format(outdir, corpus, beam, parameters["iterations"])))
-
-            unix("discodop eval {gold} {pred} spmrl.prm --fmt=discbracket --disconly > {res}".format(
-                    gold="{}/{}/{}.discbracket".format(parameters["datadir"], parameters["language"], corpus), 
-                    pred=pred_file,
-                    res = "{}/disceval_sp_{}_b{}_it{}".format(outdir, corpus, beam, parameters["iterations"])))
-
-            unix("discodop eval {gold} {pred} proper.prm --fmt=discbracket --disconly > {res}".format(
-                    gold="{}/{}/{}.discbracket".format(parameters["datadir"], parameters["language"], corpus), 
-                    pred=pred_file,
-                    res = "{}/disceval_pr_{}_b{}_it{}".format(outdir, corpus, beam, parameters["iterations"])))
-
-            unix("perl eval07.pl -g {gold} -s  {pred}.conll -o {out}".format(
-                    gold="{}/{}/{}.conll".format(parameters["datadir"], parameters["language"], corpus),
-                    pred=pred_file,
-                    out="{}/depeval_{}_b{}_it{}".format(outdir, corpus, beam, parameters["iterations"])))
-
-            unix("perl eval07.pl -p -g {gold} -s  {pred}.conll -o {out}".format(
-                    gold="{}/{}/{}.conll".format(parameters["datadir"], parameters["language"], corpus),
-                    pred=pred_file,
-                    out="{}/depeval_nopunct_{}_b{}_it{}".format(outdir, corpus, beam, parameters["iterations"])))
-
-        
-        for i in range(3, parameters["iterations"], 4) :
-            model = "{}/iteration{}".format(outdir, i)
+    
+        models = glob.glob("{}/iteration*".format(outdir))
+        for model in models:
+            i = int(model.split("/")[-1].replace("iteration", ""))
+            #for i in range(3, parameters["iterations"], 4) :
+            #model = "{}/iteration{}".format(outdir, i)
             for corpus in ["dev", "test"] :
 
                 pred_file = "{}/pred_{}b{}it{}.discbracket".format(outdir, corpus, beam, i)

@@ -302,8 +302,8 @@ int main(int argc, char *argv[]){
 
     mtg.cf->print_stats(cout);
 
-    mtg.export_model(options.output_dir);
-    enc::hodor.export_model(options.output_dir);
+//    mtg.export_model(options.output_dir);
+//    enc::hodor.export_model(options.output_dir);
 
 //    Parser newmtg(options.output_dir);
 //    newmtg.export_model(options.output_dir+"_2");

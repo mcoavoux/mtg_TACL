@@ -70,7 +70,7 @@ def do_model(datadir, best):
         dic[i]["const"] = get_discodop_eval_info(os.path.join(prefix, "{}_{}_b1_{}".format(cevalkey, corpus, iteration)))
         dic[i]["discontinuous const"] = get_discodop_eval_info(os.path.join(prefix, "disc{}_{}_b1_{}".format(cevalkey, corpus, iteration)))
         dic[i]["morph"] = eval_morpho.main(os.path.join(datadir, language, "{}.conll".format(corpus)),
-                                           os.path.join(prefix, "pred_{}b1{}.discbracket.conll".format(corpus, iteration if iteration != "it30" else ""))) ## shitty fix :(
+                                           os.path.join(prefix, "pred_{}b1{}.discbracket.conll".format(corpus, iteration)))
         dic[i]["dep"] = get_evalpl_info(os.path.join(prefix, "{}_{}_b1_{}".format(devalkey, corpus, iteration)))
     
     dic[2]["model ID"] = model+"_"+iteration

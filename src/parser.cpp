@@ -196,9 +196,10 @@ void Parser::train_global(Treebank &train_tbk,
         }
         cerr << endl;
 
-        if (e % 4 == 3  &&
-                ((e >= 19 && cf->get_id() < Classifier::FFNN) || // structured perceptron is slower to converge (in number of iterations ;)
-                 (e >= 3 && cf->get_id() >= Classifier::FFNN))){ // for some datasets, 4 / 8 iterations can be enouch for bi-lstm
+        if (e == epochs - 1 || e % 4 == 3){
+//                (e % 4 == 3  &&
+//                 ((e >= 19 && cf->get_id()  < Classifier::FFNN) || // structured perceptron is slower to converge (in number of iterations ;)
+//                  (e >= 3  && cf->get_id() >= Classifier::FFNN)))){ // for some datasets, 4 / 8 iterations can be enouch for bi-lstm
             string out_at_iteration = outdir + "/iteration" + std::to_string(e);
             mkdir(out_at_iteration.c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
             export_model(out_at_iteration);
