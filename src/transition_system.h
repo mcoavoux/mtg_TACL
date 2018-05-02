@@ -133,6 +133,10 @@ public:
 
 };
 
+class UnlexicalizedGapTS : public GapTS{
+    // TODO
+};
+
 
 // Shift, Gap_i, Idle, RU, Ghost-Reduce, RL, RR
 class CompoundGapTS : public TransitionSystem{
@@ -178,7 +182,7 @@ public:
 };
 
 class MergeLabelTSWithHeadDrivenOracle : public MergeLabelTS{
-
+    // TODO
 };
 
 class LexicalizedMergeLabelTS : public TransitionSystem{
