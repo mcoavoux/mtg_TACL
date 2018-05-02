@@ -179,7 +179,7 @@ public:
 
 class MergeLabelTSWithHeadDrivenOracle : public MergeLabelTS{
 
-}
+};
 
 class LexicalizedMergeLabelTS : public TransitionSystem{
 
