@@ -3,6 +3,7 @@
 import subprocess
 import glob
 import os
+from joblib import Parallel, delayed
 
 def unix(command) :
     print(command)
@@ -17,38 +18,40 @@ def get_beam_it(filename):
     assert(int(b) == 1)
     return b, i
 
+def evaluate_one(l):
+    datadir, expedir, pred_file = l
+    
+    exp, model_type, corpus, model, p_file = pred_file.split("/")
+    
+    corpus_type = None
+    if "dev" in pred_file:
+        corpus_type = "dev"
+    else:
+        corpus_type = "test"
+        assert("test" in pred_file)
+    
+    gold_corpus = "{}/{}/{}.discbracket".format(datadir, corpus, corpus_type)
+    assert(os.path.exists(gold_corpus))
+    
+    b, it = get_beam_it(p_file)
+    
+    # disceval_pr_dev_b1_it19
+    
+    output = "/".join([exp, model_type, corpus, model, "disceval_pr_{}_b{}_it{}".format(corpus_type, b, it)])
+    command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket --disconly > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
+    unix(command)
+    
+    output = "/".join([exp, model_type, corpus, model, "eval_pr_{}_b{}_it{}".format(corpus_type, b, it)])
+    command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
+    unix(command)
+
 def evaluate(datadir, expedir):
     
     expedir = expedir.strip("/")
     
     pred_files = glob.glob("{}/*/*/*/pred*.discbracket".format(expedir))
     
-    for pred_file in pred_files:
-        
-        exp, model_type, corpus, model, p_file = pred_file.split("/")
-        
-        corpus_type = None
-        if "dev" in pred_file:
-            corpus_type = "dev"
-        else:
-            corpus_type = "test"
-            assert("test" in pred_file)
-        
-        
-        gold_corpus = "{}/{}/{}.discbracket".format(datadir, corpus, corpus_type)
-        assert(os.path.exists(gold_corpus))
-        
-        b, it = get_beam_it(p_file)
-        
-        # disceval_pr_dev_b1_it19
-        
-        output = "/".join([exp, model_type, corpus, model, "disceval_pr_{}_b{}_it{}".format(corpus_type, b, it)])
-        command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket --disconly > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
-        unix(command)
-        
-        output = "/".join([exp, model_type, corpus, model, "eval_pr_{}_b{}_it{}".format(corpus_type, b, it)])
-        command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
-        unix(command)
+    Parallel(n_jobs=4)(delayed(evaluate_one)([datadir, expedir, f]) for f in pred_files)
 
 
 def main():
