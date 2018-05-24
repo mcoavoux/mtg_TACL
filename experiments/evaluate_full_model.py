@@ -99,8 +99,13 @@ def do_models(datadir, lang) :
         cevalkey = "eval_pr_dev"
     
     ## Find best model
+    
+    print()
+    print(lang)
+    print(list(dirlist(lang)))
+    print()
+    
     for model in dirlist(lang) :
-        #print(model)
         filenames = []
         for filename in sorted(os.listdir(model)) :
             path = os.path.join(model, filename)
@@ -110,6 +115,7 @@ def do_models(datadir, lang) :
         for path in sorted(filenames, key = lambda x : int(x.split("it")[-1])) :
             evalinfo = get_discodop_eval_info(path)
             fscore = evalinfo["labeled f-measure"]
+            
             if fscore > bestf :
                 bestf = fscore
                 best = path
@@ -126,7 +132,7 @@ def get_all_results(datadir, expedir) :
     results = {}
     
     for model_type in dirlist(expedir) :
-        #print(model_type)
+        print(model_type)
         for lang in dirlist(model_type) :
             print(lang)
             results[lang] = do_models(datadir, lang)
@@ -156,7 +162,8 @@ def generate_const_results(results, mapping, write=sys.stderr.write) :
         write("    Transition System & Features  & F & Disc. F & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
         write("    \\midrule\n")
         
-        for model_type in ["gap_lex", "gap_unlex", "merge0_unlex", "merge1_unlex", "merge2_lex", "merge2_unlex", "merge3_lex", "merge3_unlex"] :
+        for model_type in ["gap_unlex_uncat", "gap_lex_uncat", "gap_unlex", "gap_lex", "merge0_unlex_uncat", "merge0_unlex", "merge2_unlex_uncat", "merge2_lex_uncat", "merge2_unlex", "merge2_lex"]:
+        #for model_type in ["gap_lex", "gap_unlex", "merge0_unlex", "merge1_unlex", "merge2_lex", "merge2_unlex", "merge3_lex", "merge3_unlex"] :
             mod = mapping[model_type]
             res_by_lang = []
             for language in ["dptb", "tiger_spmrl", "negra", "ftb"] :
@@ -229,22 +236,21 @@ if __name__ == "__main__" :
     
     args = parser.parse_args()
 
-    features = [("{base}", "{+lex}"), ("{+nt}", "{+nt+lex}")]
-    if "uncat" in args.expedir :
-        features = features[0]
-    else :
-        features = features[1]
+    features = ["{base}", "{+lex}", "{+nt}", "{+nt+lex}"]
     
     mapping={"dptb" : "English", "ftb" : "French", "tiger_spmrl" : "German (Tiger)", "negra" : "German (Negra)",
-            "gap_lex"      : "\\textsc{sr-gap}          & \\textsc" + features[1],
-            "gap_unlex"    : "\\textsc{sr-gap}          & \\textsc" + features[0],
-            "merge0_unlex" : "\\textsc{ml-gap}-2        & \\textsc" + features[0],
-            "merge1_unlex" : "\\textsc{ml-gap}-1        & \\textsc" + features[0],
-            "merge2_lex"   : "\\textsc{ml-gap-lex}-2    & \\textsc" + features[1],
-            "merge2_unlex" : "\\textsc{ml-gap-lex}-2    & \\textsc" + features[0],
-            "merge3_lex"   : "\\textsc{ml-gap-lex}-1    & \\textsc" + features[1],
-            "merge3_unlex" : "\\textsc{ml-gap-lex}-1    & \\textsc" + features[0]}
+            "gap_unlex_uncat"    : "\\textsc{sr-gap}          & \\textsc" + features[0],
+            "gap_lex_uncat"      : "\\textsc{sr-gap}          & \\textsc" + features[1],
+            "gap_unlex"          : "\\textsc{sr-gap}          & \\textsc" + features[2],
+            "gap_lex"            : "\\textsc{sr-gap}          & \\textsc" + features[3],
+        
+            "merge0_unlex_uncat" : "\\textsc{ml-gap}          & \\textsc" + features[0],
+            "merge0_unlex"       : "\\textsc{ml-gap}          & \\textsc" + features[2],
 
+            "merge2_unlex_uncat" : "\\textsc{ml-gap-lex}      & \\textsc" + features[0],
+            "merge2_lex_uncat"   : "\\textsc{ml-gap-lex}      & \\textsc" + features[1],
+            "merge2_unlex"       : "\\textsc{ml-gap-lex}      & \\textsc" + features[2],
+            "merge2_lex"         : "\\textsc{ml-gap-lex}      & \\textsc" + features[3]}
     
     results = get_all_results(args.datadir, args.expedir)
     
