@@ -45,13 +45,13 @@ def evaluate_one(l):
     command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
     unix(command)
 
-def evaluate(datadir, expedir):
+def evaluate(datadir, expedir, threads):
     
     expedir = expedir.strip("/")
     
     pred_files = glob.glob("{}/*/*/*/pred*.discbracket".format(expedir))
     
-    Parallel(n_jobs=4)(delayed(evaluate_one)([datadir, expedir, f]) for f in pred_files)
+    Parallel(n_jobs=threads)(delayed(evaluate_one)([datadir, expedir, f]) for f in pred_files)
 
 
 def main():
@@ -62,9 +62,10 @@ def main():
     parser = argparse.ArgumentParser(description = usage, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("datadir", help="directory with experiments")
     parser.add_argument("expedir", help="directory with experiments")
+    parser.add_argument("--threads", type=int, default=4)
     args = parser.parse_args()
     
-    evaluate(args.datadir, args.expedir)
+    evaluate(args.datadir, args.expedir, args.threads)
 
 
 
