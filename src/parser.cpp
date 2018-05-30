@@ -69,6 +69,8 @@ void Parser::summary(int beamsize, int epochs, const string &outdir, int train_s
         cerr << "- Transition System: compound gap,  actions=[shift, gap_i (i can be 0), ru, rr, rl, ghost reduce]" << endl; break;
     case TransitionSystem::MERGE_LABEL_TS:
         cerr << "- Transition System: merge-label, actions=[shift, gap, merge, label / no label, idle]" << endl; break;
+    case TransitionSystem::MERGE_LABEL_TS_LEX_ORACLE:
+        cerr << "- Transition System: merge-label, actions=[shift, gap, merge, label / no label, idle] Head driven oracle" << endl; break;
     case TransitionSystem::SHIFT_REDUCE:
         cerr << "- Transition System: standard shift-reduce,  actions=[shift, ru, rr, rl, idle]" << endl; break;
     case TransitionSystem::LEXICALIZED_MERGE_LABEL_TS:
@@ -631,6 +633,7 @@ TransitionSystem* Parser::transition_system_factory(int ts_id, const Grammar &gr
     case TransitionSystem::LEXICALIZED_MERGE_LABEL_TS: return new LexicalizedMergeLabelTS(grammar);
     case TransitionSystem::MERGE_LABEL_PROJ_TS: return new MergeLabelProjTS(grammar);
     case TransitionSystem::LEXICALIZED_MERGE_LABEL_PROJ_TS: return new LexicalizedMergeLabelProjTS(grammar);
+    case TransitionSystem::MERGE_LABEL_TS_LEX_ORACLE: return new MergeLabelTSWithHeadDrivenOracle(grammar);
     default:
         assert(false && "Unknown transition system or not implemented");
     }

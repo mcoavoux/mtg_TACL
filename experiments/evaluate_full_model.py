@@ -100,10 +100,10 @@ def do_models(datadir, lang) :
     
     ## Find best model
     
-    print()
-    print(lang)
-    print(list(dirlist(lang)))
-    print()
+    #print()
+    #print(lang)
+    #print(list(dirlist(lang)))
+    #print()
     
     for model in dirlist(lang) :
         filenames = []
@@ -132,9 +132,9 @@ def get_all_results(datadir, expedir) :
     results = {}
     
     for model_type in dirlist(expedir) :
-        print(model_type)
+        #print(model_type)
         for lang in dirlist(model_type) :
-            print(lang)
+            #print(lang)
             results[lang] = do_models(datadir, lang)
     return results
 
@@ -156,17 +156,21 @@ def generate_const_results(results, mapping, write=sys.stderr.write) :
         
         write("---------------{}----------------------\n".format(TYPENAME))
         write("                                          \n")
-        write("\\begin{tabular}{ll cc cc cc cc}\n")
+        #write("\\begin{tabular}{ll cc cc cc cc}\n")
+        write("\\begin{tabular}{ll cc cc cc}\n")
         write("    \\toprule\n")
-        write("    &&\\multicolumn{2}{c}{English} & \\multicolumn{2}{c}{German (Tiger)} & \\multicolumn{2}{c}{German (Negra)} & \\multicolumn{2}{c}{French} \\\\\n")
-        write("    Transition System & Features  & F & Disc. F & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
+        #write("    &&\\multicolumn{2}{c}{English} & \\multicolumn{2}{c}{German (Tiger)} & \\multicolumn{2}{c}{German (Negra)} & \\multicolumn{2}{c}{French} \\\\\n")
+        write("    &&\\multicolumn{2}{c}{English} & \\multicolumn{2}{c}{German (Tiger)} & \\multicolumn{2}{c}{German (Negra)} \\\\\n")
+        #write("    Transition System & Features  & F & Disc. F & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
+        write("    Transition System & Features  & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
         write("    \\midrule\n")
         
-        for model_type in ["gap_unlex_uncat", "gap_lex_uncat", "gap_unlex", "gap_lex", "merge0_unlex_uncat", "merge0_unlex", "merge2_unlex_uncat", "merge2_lex_uncat", "merge2_unlex", "merge2_lex"]:
+        for model_type in ["gap_unlex_uncat", "gap_unlex", "gap_lex_uncat", "gap_lex", "merge0_unlex_uncat", "merge0_unlex", "merge2_unlex_uncat", "merge2_unlex", "merge2_lex_uncat", "merge2_lex"]:
         #for model_type in ["gap_lex", "gap_unlex", "merge0_unlex", "merge1_unlex", "merge2_lex", "merge2_unlex", "merge3_lex", "merge3_unlex"] :
             mod = mapping[model_type]
             res_by_lang = []
-            for language in ["dptb", "tiger_spmrl", "negra", "ftb"] :
+            #for language in ["dptb", "tiger_spmrl", "negra", "ftb"] :
+            for language in ["dptb", "tiger_spmrl", "negra"] :
                 res_by_lang.extend(list(d[model_type][language]))
             #print(res_by_lang)
             #print(" & ".join([str(round(x, 2)) for x in res_by_lang]))

@@ -117,6 +117,7 @@ int main(int argc, char *argv[]){
     }
 
     bool unlexicalised = (mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_TS
+                          || mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_TS_LEX_ORACLE
                           || mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_PROJ_TS);
 
     if (! options.output_file.empty() && ! options.test_file.empty()){

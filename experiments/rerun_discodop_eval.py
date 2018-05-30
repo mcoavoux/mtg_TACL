@@ -38,12 +38,14 @@ def evaluate_one(l):
     # disceval_pr_dev_b1_it19
     
     output = "/".join([exp, model_type, corpus, model, "disceval_pr_{}_b{}_it{}".format(corpus_type, b, it)])
-    command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket --disconly > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
-    unix(command)
+    if not os.path.exists(output) or os.stat(output).st_size == 0:
+        command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket --disconly > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
+        unix(command)
     
     output = "/".join([exp, model_type, corpus, model, "eval_pr_{}_b{}_it{}".format(corpus_type, b, it)])
-    command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
-    unix(command)
+    if not os.path.exists(output) or os.stat(output).st_size == 0:
+        command = "discodop eval {gold} {pred} proper.prm --fmt=discbracket > {res}".format(gold=gold_corpus, pred=pred_file, res=output)
+        unix(command)
 
 def evaluate(datadir, expedir, threads):
     

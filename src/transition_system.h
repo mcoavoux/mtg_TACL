@@ -61,16 +61,19 @@ protected:
     int system_id;
 public:
     enum {GAP_TS, CGAP_TS, MERGE_LABEL_TS, SHIFT_REDUCE, LEXICALIZED_MERGE_LABEL_TS,
-         MERGE_LABEL_PROJ_TS, LEXICALIZED_MERGE_LABEL_PROJ_TS};// transition system identifiers
+         MERGE_LABEL_PROJ_TS, LEXICALIZED_MERGE_LABEL_PROJ_TS,
+         MERGE_LABEL_TS_LEX_ORACLE};// transition system identifiers
 
     TransitionSystem(int s_id);
     virtual ~TransitionSystem();
 
-    virtual int get_id()=0;
     virtual void compute_derivation(Tree &tree, Derivation &derivation)=0;
     virtual bool allowed(ParseState &state, int buffer_size, int i) = 0;
 
     virtual Action* get_idle()=0;
+
+    //virtual int get_id()=0;
+    int get_id();
 
     void allowed(ParseState &state, int buffer_size, vector<bool> &allowed_actions);
 
@@ -117,7 +120,7 @@ class GapTS : public TransitionSystem{
 public:
     GapTS(const Grammar &g);
 
-    int get_id();
+    //int get_id();
 
     Action* get_idle();
 
@@ -133,7 +136,7 @@ public:
 
 };
 
-class UnlexicalizedGapTS : public GapTS{
+class UnlexicalizedSRGapTS : public GapTS{
     // TODO
 };
 
@@ -144,7 +147,7 @@ class CompoundGapTS : public TransitionSystem{
 public:
     CompoundGapTS(const Grammar &g);
 
-    int get_id();
+    //int get_id();
 
     Action* get_idle();
 
@@ -169,11 +172,11 @@ public:
 
     MergeLabelTS(const Grammar &g);
 
-    int get_id();
+    //int get_id();
 
     Action* get_idle();
 
-    void compute_derivation(Tree &tree, Derivation &derivation);
+    virtual void compute_derivation(Tree &tree, Derivation &derivation);
 
     bool allowed(ParseState &state, int buffer_size, int i);
 
@@ -183,6 +186,10 @@ public:
 
 class MergeLabelTSWithHeadDrivenOracle : public MergeLabelTS{
     // TODO
+public:
+    MergeLabelTSWithHeadDrivenOracle(const Grammar &g);
+
+    void compute_derivation(Tree &tree, Derivation &derivation);
 };
 
 class LexicalizedMergeLabelTS : public TransitionSystem{
@@ -192,7 +199,7 @@ public:
 
     LexicalizedMergeLabelTS(const Grammar &g);
 
-    int get_id();
+    //int get_id();
 
     Action* get_idle();
 
@@ -212,7 +219,7 @@ public:
 class ShiftReduce : public GapTS{
 public:
     ShiftReduce(const Grammar &g);
-    int get_id();
+    //int get_id();
     bool allowed_reduce(ParseState &state, const Action &a, int buffer_size);
     bool allowed_gap(ParseState &state);
 };
@@ -221,14 +228,14 @@ public:
 class MergeLabelProjTS : public MergeLabelTS{
 public:
     MergeLabelProjTS(const Grammar &g);
-    int get_id();
+    //int get_id();
     bool allowed(ParseState &state, int buffer_size, int i);
 };
 
 class LexicalizedMergeLabelProjTS : public LexicalizedMergeLabelTS{
 public:
     LexicalizedMergeLabelProjTS(const Grammar &g);
-    int get_id();
+    //int get_id();
     bool allowed(ParseState &state, int buffer_size, int i);
     bool allowed_no_label(ParseState &state, const Action &a, int buffer_size);
 };

@@ -25,7 +25,7 @@ debug_wstring: alld
 
 OBJ_FILES_G=tss_beam.o  utils.o  tree.o  treebank.o  str_utils.o  grammar.o  parser.o  transition_system.o  features.o  classifier.o  hash_utils.o  layers.o  logger.o  random_utils.o
 
-FLAGS_GCC=-std=c++11 -O3 -Wall -Wno-sign-compare $(DEBUG) $(WSTR) -I../lib
+FLAGS_GCC=-std=c++11 -O3 -Wall -Wno-sign-compare -Wno-deprecated $(DEBUG) $(WSTR) -I../lib
 
 mtg2_trainer: $(OBJ_FILES_G) mtg.cpp
 	$(CC)       $(FLAGS_GCC)   $(OBJ_FILES_G)   mtg.cpp   -o $(BUILD_DIR)/mtg2_trainer

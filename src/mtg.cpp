@@ -144,18 +144,14 @@ int main(int argc, char *argv[]){
                 options.classifier = Classifier::RNN_LABEL_STRUCTURE;
                 break;
             }
-            case 1:{
-                options.classifier = Classifier::RNN;
-                break;
-            }
             case 2:{
                 options.transition_system = TransitionSystem::LEXICALIZED_MERGE_LABEL_TS;
                 options.classifier = Classifier::RNN_LABEL_STRUCTURE_LEX;
                 break;
             }
-            case 3:{
-                options.transition_system = TransitionSystem::LEXICALIZED_MERGE_LABEL_TS;
-                options.classifier = Classifier::RNN;
+            case 4:{
+                options.transition_system = TransitionSystem::MERGE_LABEL_TS_LEX_ORACLE;
+                options.classifier = Classifier::RNN_LABEL_STRUCTURE;
                 break;
             }
             case 10:{
@@ -163,26 +159,41 @@ int main(int argc, char *argv[]){
                 options.classifier = Classifier::RNN_LABEL_STRUCTURE;
                 break;
             }
-            case 11:{
-                options.transition_system = TransitionSystem::MERGE_LABEL_PROJ_TS;
-                options.classifier = Classifier::RNN;
-                break;
-            }
             case 12:{
                 options.transition_system = TransitionSystem::LEXICALIZED_MERGE_LABEL_PROJ_TS;
                 options.classifier = Classifier::RNN_LABEL_STRUCTURE_LEX;
                 break;
             }
+//            case 3:{
+//                options.transition_system = TransitionSystem::LEXICALIZED_MERGE_LABEL_TS;
+//                options.classifier = Classifier::RNN;
+//                break;
+//            }
+//            case 1:{
+//                options.classifier = Classifier::RNN;
+//                break;
+//            }
+//            case 11:{
+//                options.transition_system = TransitionSystem::MERGE_LABEL_PROJ_TS;
+//                options.classifier = Classifier::RNN;
+//                break;
+//            }
+//            case 13:{
+//                options.transition_system = TransitionSystem::LEXICALIZED_MERGE_LABEL_PROJ_TS;
+//                options.classifier = Classifier::RNN;
+//                break;
+            case 1:
+            case 3:
+            case 11:
             case 13:{
-                options.transition_system = TransitionSystem::LEXICALIZED_MERGE_LABEL_PROJ_TS;
-                options.classifier = Classifier::RNN;
-                break;
+                cerr << "No longer supported. Aborting..." << endl;
+                return 1;
             }
             default:
                 cerr << "Unrecognised argument for -m option, aborting..." << endl;
                 exit(1);
             }
-            break;// huge bug fix.
+            break;
         }
         case 'N':{
             //cerr << "N options" << endl;
