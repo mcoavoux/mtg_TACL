@@ -390,9 +390,6 @@ TransitionSystem* TransitionSystem::import_model(const string &outdir){
     ifstream in2(outdir + "/system_actions");
     string buffer;
     while (getline(in2, buffer)){
-//        boost::char_separator<char> sep(" ");
-//        boost::tokenizer<boost::char_separator<char>> toks(buffer, sep);
-//        vector<string> tokens(toks.begin(), toks.end());
         vector<string> tokens;
         str::split(buffer, " ", "", tokens);
         assert(tokens.size() == 3);
@@ -510,9 +507,6 @@ void TransitionSystem::print_stats(const string &train_file, const string &outfi
     }
 
     for (int id : tss){
-        //cerr << "ID " << id << endl;
-//        if (transition_system == SHIFT_REDUCE && id != SHIFT_REDUCE){ continue;}
-//        if (transition_system != SHIFT_REDUCE && id == SHIFT_REDUCE){ continue;}
         TransitionSystem *ts = nullptr;
 
         switch (id){
@@ -826,10 +820,6 @@ GapTS::GapTS(const Grammar &g):TransitionSystem(GAP_TS){
     grammar = g;
 }
 
-//int GapTS::get_id(){
-//    return TransitionSystem::GAP_TS;
-//}
-
 Action* GapTS::get_idle(){
     return &actions[IDLE_I];
 }
@@ -901,7 +891,8 @@ void GapTS::compute_derivation(Tree &tree, Derivation &derivation){
 
         if (stack.size() > 1){
             int gaps = -1;
-            for (int i = 0; i < stack.size(); i++){         // TODO: who on earth coded this ? use parent ptr instead
+            // TODO: can use parent ptr instead ?
+            for (int i = 0; i < stack.size(); i++){
                 shared_ptr<Node> candidate = stack[stack.size() - 1 - i];
                 shared_ptr<Node> f1,f2;
                 s0p->get(0,f1);
@@ -1055,10 +1046,6 @@ CompoundGapTS::CompoundGapTS(const Grammar &g):TransitionSystem(CGAP_TS){
     }
     grammar = g;
 }
-
-//int CompoundGapTS::get_id(){
-//    return TransitionSystem::CGAP_TS;
-//}
 
 Action* CompoundGapTS::get_idle(){
     return &actions[IDLE_I];
@@ -1285,10 +1272,6 @@ MergeLabelTS::MergeLabelTS(const Grammar &g):TransitionSystem(MERGE_LABEL_TS){
     grammar = g;
 }
 
-//int MergeLabelTS::get_id(){
-//    return TransitionSystem::MERGE_LABEL_TS;
-//}
-
 Action* MergeLabelTS::get_idle(){
     return &actions[IDLE_I];
 }
@@ -1373,7 +1356,7 @@ void MergeLabelTS::compute_derivation(Tree &tree, Derivation &derivation){
 
             if (stack.size() > 1){
                 int gaps = -1;
-                for (int i = 0; i < stack.size(); i++){         // TODO: who on earth coded this ? use parent ptr instead
+                for (int i = 0; i < stack.size(); i++){
                     shared_ptr<Node> candidate = stack[stack.size() - 1 - i];
                     shared_ptr<Node> candparent;
                     candidate->get_parent(candparent);
@@ -1421,17 +1404,9 @@ void MergeLabelTS::compute_derivation(Tree &tree, Derivation &derivation){
             shared_ptr<Node> s0p;
             s0->get_parent(s0p);
 
-//            if (deriv.size() == 1){
-//                cerr << "HHHHH " << *s0 << endl;
-//                cerr << "HHHHH " << *s0p << endl;
-//            }
-
             // label / no label
             if (s0->is_preterminal()){
-                //if (deriv.size() == 1){ cerr << " has label" << endl; }
-                //assert(s0->is_preterminal());
                 if (s0p->arity() == 1){
-                    //if (deriv.size() == 1){ cerr << " arity == 1" << endl; }
                     assert(deque.size() == 1 && "Error in derivation extraction");
                     deriv.push_back(Action(Action::LABEL, s0p->label(), -1));
                     deque.pop_back();
@@ -1441,12 +1416,7 @@ void MergeLabelTS::compute_derivation(Tree &tree, Derivation &derivation){
                     deriv.push_back(actions[NULL_ACTION_I]);
                 }
             }else{
-//                if (deriv.size() == 1){
-//                    cerr << " has no label" << endl;
-//                    cerr << *s0 << endl;
-//                }
                 if (s0p->arity() == s0->arity()){
-                    //if (deriv.size() == 1){ cerr << " arity == s0 arity" << endl; }
                     deriv.push_back(Action(Action::LABEL, s0p->label(), -1));
                     deque.pop_back();
                     deque.push_back(s0p);
@@ -1519,28 +1489,7 @@ bool MergeLabelTS::allowed_label(ParseState &state, const Action &a, int buffer_
     }else{
         return ! grammar.is_axiom(a.label());
     }
-//    return buffer_j_ == buffer_size
-//            && top_->is_bottom()
-//            && grammar.is_axiom(top_->n->label());
-
-//    state.label_action() &&
-//    state.top_ != nullptr &&
-//   (! state.top_->n->has_label() || );
-
 }
-
-//bool MergeLabelTS::allowed_reduce_u(ParseState &state, const Action &a, int buffer_size){
-//    if (grammar.is_axiom(a.label())){
-//        if (state.top_->is_bottom() &&
-//               state.buffer_j_ == buffer_size &&
-//               ! grammar.is_axiom(state.top_->n->label())){
-//            assert(buffer_size == 1);
-//            return true;
-//        }
-//        return false;
-//    }
-//    return state.buffer_j_ != buffer_size || ! state.top_->is_bottom();
-//}
 
 
 
@@ -1598,21 +1547,6 @@ void MergeLabelTSWithHeadDrivenOracle::compute_derivation(Tree &tree, Derivation
                 if (s0p == s1p){
                     deriv.push_back(Action(Action::MERGE, -1));
 
-//                    int hpos = s0p->h();
-//                    if (s0->index() < s1->index()){
-//                        hpos = 1 - hpos;
-//                    }
-//                    if (hpos == 0){
-//                        assert( has_head( s0p, s1 ));
-//                        deriv.push_back(Action(Action::LEFT, -1));
-//                    }else{
-//                        assert( has_head( s0p, s0 ));
-//                        assert ( hpos == 1 );
-//                        deriv.push_back(Action(Action::RIGHT, -1));
-//                    }
-
-                    //deriv.push_back(Action(Action::MERGE, -1));
-
                     stack.pop_back();
                     deque.pop_back();
 
@@ -1624,16 +1558,6 @@ void MergeLabelTSWithHeadDrivenOracle::compute_derivation(Tree &tree, Derivation
 
                     vector<shared_ptr<Node>> newchildren{s0, s1};
 
-//                    if (s0->has_label()){
-//                        newchildren.push_back(s0);
-//                    }else{
-//                        s0->get_children(newchildren);
-//                    }
-//                    if (s1->has_label()){
-//                        newchildren.push_back(s1);
-//                    }else{
-//                        s1->get_children(newchildren);
-//                    }
                     assert(newchildren.size() > 0);
                     shared_ptr<Node> node = shared_ptr<Node>(new Node(newchildren));
                     node->set_parent(s0p);       // intermediary node
@@ -1646,7 +1570,7 @@ void MergeLabelTSWithHeadDrivenOracle::compute_derivation(Tree &tree, Derivation
 
             if (stack.size() > 1){
                 int gaps = -1;
-                for (int i = 0; i < stack.size(); i++){         // TODO: who on earth coded this ? use parent ptr instead
+                for (int i = 0; i < stack.size(); i++){
                     shared_ptr<Node> candidate = stack[stack.size() - 1 - i];
                     shared_ptr<Node> candparent;
                     candidate->get_parent(candparent);
@@ -1664,25 +1588,6 @@ void MergeLabelTSWithHeadDrivenOracle::compute_derivation(Tree &tree, Derivation
                     continue;
                 }
             }
-//            if (j >= buffer.size()){
-//                cerr << "Tree" << endl;
-//                cerr << tree << endl;
-//                cerr << "stack size " << stack.size() << endl;
-//                for (int i = 0; i < stack.size(); i++){
-//                    cerr << i << "  " << *stack[i] << endl;
-//                    cerr << i << " " << *shared_ptr<Node>(stack[i]->parent_) << endl;
-//                }
-//                cerr << "buffer size " << buffer.size() << endl;
-//                cerr << "deque size " << deque.size() << endl;
-//                for (int i = 0; i < deque.size(); i++){
-//                    cerr << i << "  " << *deque[i] << endl;
-//                    cerr << i << " " << *shared_ptr<Node>(deque[i]->parent_) << endl;
-//                }
-//                cerr << "j " << j << endl;
-//                for (int i = 0; i < deriv.size(); i++){
-//                    cerr << deriv[i] << " ";
-//                }cerr << endl;
-//            }
             assert(j < buffer.size());
             deriv.push_back(actions[SHIFT_I]);
             shift(stack, deque, buffer, j);
@@ -1694,10 +1599,6 @@ void MergeLabelTSWithHeadDrivenOracle::compute_derivation(Tree &tree, Derivation
             shared_ptr<Node> s0p;
             s0->get_parent(s0p);
 
-//            if (deriv.size() == 1){
-//                cerr << "HHHHH " << *s0 << endl;
-//                cerr << "HHHHH " << *s0p << endl;
-//            }
 
             // label / no label
             if (s0->is_preterminal()){
@@ -1714,10 +1615,6 @@ void MergeLabelTSWithHeadDrivenOracle::compute_derivation(Tree &tree, Derivation
                     deriv.push_back(actions[NULL_ACTION_I]);
                 }
             }else{
-//                if (deriv.size() == 1){
-//                    cerr << " has no label" << endl;
-//                    cerr << *s0 << endl;
-//                }
                 STRCODE label = s0p->label();
                 if (! grammar.is_tmp(label)){
                     deriv.push_back(Action(Action::LABEL, label, -1));
@@ -1764,11 +1661,6 @@ LexicalizedMergeLabelTS::LexicalizedMergeLabelTS(const Grammar &g):TransitionSys
     grammar = g;
 }
 
-// HERE:
-
-//int LexicalizedMergeLabelTS::get_id(){
-//    return TransitionSystem::LEXICALIZED_MERGE_LABEL_TS;
-//}
 
 Action* LexicalizedMergeLabelTS::get_idle(){
     return &actions[IDLE_I];
@@ -1844,16 +1736,6 @@ void LexicalizedMergeLabelTS::compute_derivation(Tree &tree, Derivation &derivat
 
                     vector<shared_ptr<Node>> newchildren{s0, s1};
 
-//                    if (s0->has_label()){
-//                        newchildren.push_back(s0);
-//                    }else{
-//                        s0->get_children(newchildren);
-//                    }
-//                    if (s1->has_label()){
-//                        newchildren.push_back(s1);
-//                    }else{
-//                        s1->get_children(newchildren);
-//                    }
                     assert(newchildren.size() > 0);
                     shared_ptr<Node> node = shared_ptr<Node>(new Node(newchildren));
                     node->set_parent(s0p);       // intermediary node
@@ -1884,25 +1766,6 @@ void LexicalizedMergeLabelTS::compute_derivation(Tree &tree, Derivation &derivat
                     continue;
                 }
             }
-//            if (j >= buffer.size()){
-//                cerr << "Tree" << endl;
-//                cerr << tree << endl;
-//                cerr << "stack size " << stack.size() << endl;
-//                for (int i = 0; i < stack.size(); i++){
-//                    cerr << i << "  " << *stack[i] << endl;
-//                    cerr << i << " " << *shared_ptr<Node>(stack[i]->parent_) << endl;
-//                }
-//                cerr << "buffer size " << buffer.size() << endl;
-//                cerr << "deque size " << deque.size() << endl;
-//                for (int i = 0; i < deque.size(); i++){
-//                    cerr << i << "  " << *deque[i] << endl;
-//                    cerr << i << " " << *shared_ptr<Node>(deque[i]->parent_) << endl;
-//                }
-//                cerr << "j " << j << endl;
-//                for (int i = 0; i < deriv.size(); i++){
-//                    cerr << deriv[i] << " ";
-//                }cerr << endl;
-//            }
             assert(j < buffer.size());
             deriv.push_back(actions[SHIFT_I]);
             shift(stack, deque, buffer, j);
@@ -1914,17 +1777,10 @@ void LexicalizedMergeLabelTS::compute_derivation(Tree &tree, Derivation &derivat
             shared_ptr<Node> s0p;
             s0->get_parent(s0p);
 
-//            if (deriv.size() == 1){
-//                cerr << "HHHHH " << *s0 << endl;
-//                cerr << "HHHHH " << *s0p << endl;
-//            }
 
             // label / no label
             if (s0->is_preterminal()){
-                //if (deriv.size() == 1){ cerr << " has label" << endl; }
-                //assert(s0->is_preterminal());
                 if (s0p->arity() == 1){
-                    //if (deriv.size() == 1){ cerr << " arity == 1" << endl; }
                     assert(deque.size() == 1 && "Error in derivation extraction");
                     deriv.push_back(Action(Action::LABEL, s0p->label(), -1));
                     deque.pop_back();
@@ -1934,10 +1790,6 @@ void LexicalizedMergeLabelTS::compute_derivation(Tree &tree, Derivation &derivat
                     deriv.push_back(actions[NULL_ACTION_I]);
                 }
             }else{
-//                if (deriv.size() == 1){
-//                    cerr << " has no label" << endl;
-//                    cerr << *s0 << endl;
-//                }
                 STRCODE label = s0p->label();
                 if (! grammar.is_tmp(label)){
                     deriv.push_back(Action(Action::LABEL, label, -1));
@@ -2061,20 +1913,15 @@ bool LexicalizedMergeLabelTS::allowed_reduce(ParseState &state, const Action &a,
 }
 
 bool LexicalizedMergeLabelTS::allowed_gap(ParseState &state){
-    //cerr << "AG 0" << endl;
     if (state.mid_->is_bottom()) return false;
-    //cerr << "AG 1" << endl;
     if (! grammar.is_tmp(state.top_->n->label())){ return true; }
-    //cerr << "AG 2" << endl;
 
     shared_ptr<StackItem> si(state.mid_->predecessor);
-    //cerr << "AG 3" << endl;
     while ( si != nullptr ){
         if (! grammar.is_tmp(si->n->label()))
             return true;
         si = si->predecessor;
     }
-    //cerr << "AG 4" << endl;
     return false;
 }
 
@@ -2092,9 +1939,6 @@ ShiftReduce::ShiftReduce(const Grammar &g) : GapTS(g){
     system_id = SHIFT_REDUCE;
 }
 
-//int ShiftReduce::get_id(){
-//    return TransitionSystem::SHIFT_REDUCE;
-//}
 
 bool ShiftReduce::allowed_reduce(ParseState &state, const Action &a, int buffer_size){
     if (grammar.is_tmp(state.top_->n->label()) && grammar.is_tmp(state.mid_->n->label())) return false; // cannot reduce 2 tmps
@@ -2135,10 +1979,6 @@ bool ShiftReduce::allowed_gap(ParseState &state){
 MergeLabelProjTS::MergeLabelProjTS(const Grammar &g):MergeLabelTS(g){
     system_id = TransitionSystem::MERGE_LABEL_PROJ_TS;
 }
-
-//int MergeLabelProjTS::get_id(){
-//    return TransitionSystem::MERGE_LABEL_PROJ_TS;
-//}
 
 bool MergeLabelProjTS::allowed(ParseState &state, int buffer_size, int i){
     const Action a = actions[i];
@@ -2184,9 +2024,6 @@ LexicalizedMergeLabelProjTS::LexicalizedMergeLabelProjTS(const Grammar &g):Lexic
     system_id = TransitionSystem::LEXICALIZED_MERGE_LABEL_PROJ_TS;
 }
 
-//int LexicalizedMergeLabelProjTS::get_id(){
-//    return TransitionSystem::LEXICALIZED_MERGE_LABEL_PROJ_TS;
-//}
 
 bool LexicalizedMergeLabelProjTS::allowed(ParseState &state, int buffer_size, int i){
     const Action a = actions[i];
