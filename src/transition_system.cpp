@@ -109,46 +109,47 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
 //    cerr << "action = " << a << endl;
     assert(allowed(*state, buffer.size(), a.code()));
     switch (a.type()){
-        case Action::SHIFT: {
-            newstate =
+    case Action::SHIFT: {
+        newstate =
                 shared_ptr<ParseState>(
                     new ParseState(
                         state,
                         shared_ptr<StackItem>(
-                                new StackItem(
-                                    state->top_,
-                                    buffer[state->buffer_j_])),
-                        state->top_,
-                        state->buffer_j_+1,
-                        a
+                            new StackItem(
+                                state->top_,
+                                buffer[state->buffer_j_])),
+                    state->top_,
+                    state->buffer_j_+1,
+                    a
                     )
-                 );
-            return;
-        }
-        case Action::REDUCE_L:
-        case Action::REDUCE_R:
-        case Action::LEFT:
-        case Action::RIGHT:
-        {
-            shared_ptr<StackItem> newbranch;
-            state->grow_new_branch(newbranch);
+                );
+        return;
+    }
+    case Action::REDUCE_L:
+    case Action::REDUCE_R:
+    case Action::LEFT:
+    case Action::RIGHT:
+    case Action::REDUCE:
+    {
+        shared_ptr<StackItem> newbranch;
+        state->grow_new_branch(newbranch);
 
-            shared_ptr<Node> node(new Node(a.label(), {state->mid_->n, state->top_->n}));
-            if (a.type() == Action::REDUCE_L || a.type() == Action::LEFT){
-                // REMINDER: head assignment has been modified wrt java implementation
-                // bc reordering can take place during node construction
-                if (state->mid_->n->index() < state->top_->n->index())
-                    node->set_h(0);
-                else
-                    node->set_h(1);
-            }else{
-                assert( (a.type() == Action::REDUCE_R || a.type() == Action::RIGHT) && "This should not happen, TransitionSystem::next");
-                if (state->mid_->n->index() < state->top_->n->index())
-                    node->set_h(1);
-                else
-                    node->set_h(0);
-            }
-            newstate =
+        shared_ptr<Node> node(new Node(a.label(), {state->mid_->n, state->top_->n}));
+        if (a.type() == Action::REDUCE_L || a.type() == Action::LEFT){
+            // REMINDER: head assignment has been modified wrt java implementation
+            // bc reordering can take place during node construction
+            if (state->mid_->n->index() < state->top_->n->index())
+                node->set_h(0);
+            else
+                node->set_h(1);
+        }else{
+            assert( (a.type() == Action::REDUCE_R || a.type() == Action::RIGHT) && "This should not happen, TransitionSystem::next");
+            if (state->mid_->n->index() < state->top_->n->index())
+                node->set_h(1);
+            else
+                node->set_h(0);
+        }
+        newstate =
                 shared_ptr<ParseState>(
                     new ParseState(
                         state,
@@ -159,102 +160,102 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
                         newbranch,
                         state->buffer_j_,
                         a
-                    )
-                );
-            return;
-        }
-        case Action::REDUCE_U: {
-            vector<shared_ptr<Node>> children;
-            shared_ptr<Node> child;
-            state->top_->get(child);
-            children.push_back(child);
-            assert(children.size() > 0);
-            shared_ptr<Node> node(new Node(a.label(), children));
-            node->set_h(0);
-            newstate =
+                        )
+                    );
+        return;
+    }
+    case Action::REDUCE_U: {
+        vector<shared_ptr<Node>> children;
+        shared_ptr<Node> child;
+        state->top_->get(child);
+        children.push_back(child);
+        assert(children.size() > 0);
+        shared_ptr<Node> node(new Node(a.label(), children));
+        node->set_h(0);
+        newstate =
                 shared_ptr<ParseState>(
                     new ParseState(
                         state,
                         shared_ptr<StackItem>(
-                                new StackItem(
-                                    state->top_->predecessor,
-                                    node)),
+                            new StackItem(
+                                state->top_->predecessor,
+                                node)),
                         state->mid_,
                         state->buffer_j_,
                         a
-                    )
-                );
-            return;
-        }
-        case Action::GAP:{
-            newstate = shared_ptr<ParseState>(
-                        new ParseState(
-                            state,
-                            state->top_,
-                            state->mid_->predecessor,
-                            state->buffer_j_,
-                            a
+                        )
+                    );
+        return;
+    }
+    case Action::GAP:{
+        newstate = shared_ptr<ParseState>(
+                    new ParseState(
+                        state,
+                        state->top_,
+                        state->mid_->predecessor,
+                        state->buffer_j_,
+                        a
                         ));
-            return;
-        }
-        case Action::IDLE:
-        case Action::GHOST_REDUCE:
-        case Action::NULL_ACTION:
-        {
-            newstate = shared_ptr<ParseState>(
-                        new ParseState(
-                            state,
-                            state->top_,
-                            state->mid_,
-                            state->buffer_j_,
-                            a
+        return;
+    }
+    case Action::IDLE:
+    case Action::GHOST_REDUCE:
+    case Action::NULL_ACTION:
+    {
+        newstate = shared_ptr<ParseState>(
+                    new ParseState(
+                        state,
+                        state->top_,
+                        state->mid_,
+                        state->buffer_j_,
+                        a
                         ));
-            return;
+        return;
+    }
+    case Action::COMPOUND_GAP:{
+        int i = a.order();
+        shared_ptr<StackItem> item = state->mid_;
+        while (i > 0){
+            item = item->predecessor;
+            i--;
+            assert(item != nullptr);
         }
-        case Action::COMPOUND_GAP:{
-            int i = a.order();
-            shared_ptr<StackItem> item = state->mid_;
-            while (i > 0){
-                item = item->predecessor;
-                i--;
-                assert(item != nullptr);
-            }
-            newstate = shared_ptr<ParseState>(
-                        new ParseState(
-                            state,
-                            state->top_,
-                            item,
-                            state->buffer_j_,
-                            a
+        newstate = shared_ptr<ParseState>(
+                    new ParseState(
+                        state,
+                        state->top_,
+                        item,
+                        state->buffer_j_,
+                        a
                         ));
-            return;
-        }
-        case Action::MERGE:
-        {
-            shared_ptr<StackItem> newbranch;
-            state->grow_new_branch(newbranch);
+        return;
+    }
+    case Action::MERGE:
+    {
+        shared_ptr<StackItem> newbranch;
+        state->grow_new_branch(newbranch);
 
-            vector<shared_ptr<Node>> newchildren;
-//            cerr << state->mid_->n->has_label() << endl;
-//            cerr << state->mid_->n->is_preterminal() << endl;
-//            cerr << *state->mid_->n << endl;
-//            cerr << state->top_->n->has_label() << endl;
-//            cerr << state->top_->n->is_preterminal() << endl;
-//            cerr << *state->top_->n << endl;
+        vector<shared_ptr<Node>> newchildren;
+        //            cerr << state->mid_->n->has_label() << endl;
+        //            cerr << state->mid_->n->is_preterminal() << endl;
+        //            cerr << *state->mid_->n << endl;
+        //            cerr << state->top_->n->has_label() << endl;
+        //            cerr << state->top_->n->is_preterminal() << endl;
+        //            cerr << *state->top_->n << endl;
 
-            if (state->mid_->n->has_label() || state->mid_->n->is_preterminal()){
-                newchildren.push_back(state->mid_->n);
-            }else{
-                state->mid_->n->get_children(newchildren);
-            }
-            if (state->top_->n->has_label() || state->top_->n->is_preterminal()){
-                newchildren.push_back(state->top_->n);
-            }else{
-                state->top_->n->get_children(newchildren);
-            }
-            assert(newchildren.size() > 1);
-            shared_ptr<Node> node(new Node(newchildren));
-            newstate =
+        if (state->mid_->n->has_label() || state->mid_->n->is_preterminal()){
+            newchildren.push_back(state->mid_->n);
+        }else{
+            state->mid_->n->get_children(newchildren);
+        }
+        if (state->top_->n->has_label() || state->top_->n->is_preterminal()){
+            newchildren.push_back(state->top_->n);
+        }else{
+            state->top_->n->get_children(newchildren);
+        }
+        assert(newchildren.size() > 1);
+        shared_ptr<Node> node(new Node(newchildren));
+        newstate =
                 shared_ptr<ParseState>(
                     new ParseState(
                         state,
@@ -265,62 +266,62 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
                         newbranch,
                         state->buffer_j_,
                         a
-                    )
-                );
-            return;
-        }
-        case Action::LABEL:
-        {
-            assert ((! state->top_->n->has_label() || state->top_->n->is_preterminal()) && "Node already has a label");
-            if (state->top_->n->is_preterminal()){
-                vector<shared_ptr<Node>> newchildren{state->top_->n};
-                assert(newchildren.size() > 0);
-                shared_ptr<Node> node(new Node(a.label(), newchildren));
-                node->set_h(0);
-                newstate =
-                        shared_ptr<ParseState>(
-                            new ParseState(
-                                state,
-                                shared_ptr<StackItem>(
-                                    new StackItem(
-                                        state->top_->predecessor,
-                                        node)),
-                                state->mid_,
-                                state->buffer_j_,
-                                a
-                                )
-                            );
-            }else{
-                assert(! state->top_->n->has_label());
-                vector<shared_ptr<Node>> newchildren;
-                state->top_->n->get_children(newchildren);
-//                if (newchildren.size() <= 1){
-//                    cerr << *state << endl;
-//                }
-                assert(newchildren.size() > 1);
-                shared_ptr<Node> node(new Node(a.label(), newchildren));
-                int head_idx = state->top_->n->h();
-                if (head_idx > -1){
-                    node->set_h(head_idx);
-                }
-                newstate =
-                        shared_ptr<ParseState>(
-                            new ParseState(
-                                state,
-                                shared_ptr<StackItem>(
-                                    new StackItem(
-                                        state->top_->predecessor,
-                                        node)),
-                                state->mid_,
-                                state->buffer_j_,
-                                a
-                                )
-                            );
+                        )
+                    );
+        return;
+    }
+    case Action::LABEL:
+    {
+        assert ((! state->top_->n->has_label() || state->top_->n->is_preterminal()) && "Node already has a label");
+        if (state->top_->n->is_preterminal()){
+            vector<shared_ptr<Node>> newchildren{state->top_->n};
+            assert(newchildren.size() > 0);
+            shared_ptr<Node> node(new Node(a.label(), newchildren));
+            node->set_h(0);
+            newstate =
+                    shared_ptr<ParseState>(
+                        new ParseState(
+                            state,
+                            shared_ptr<StackItem>(
+                                new StackItem(
+                                    state->top_->predecessor,
+                                    node)),
+                            state->mid_,
+                            state->buffer_j_,
+                            a
+                            )
+                        );
+        }else{
+            assert(! state->top_->n->has_label());
+            vector<shared_ptr<Node>> newchildren;
+            state->top_->n->get_children(newchildren);
+            //                if (newchildren.size() <= 1){
+            //                    cerr << *state << endl;
+            //                }
+            assert(newchildren.size() > 1);
+            shared_ptr<Node> node(new Node(a.label(), newchildren));
+            int head_idx = state->top_->n->h();
+            if (head_idx > -1){
+                node->set_h(head_idx);
             }
-            return;
+            newstate =
+                    shared_ptr<ParseState>(
+                        new ParseState(
+                            state,
+                            shared_ptr<StackItem>(
+                                new StackItem(
+                                    state->top_->predecessor,
+                                    node)),
+                            state->mid_,
+                            state->buffer_j_,
+                            a
+                            )
+                        );
         }
-        default:
-            assert(false && "Unknown or illegal action");
+        return;
+    }
+    default:
+        assert(false && "Unknown or illegal action");
     }
 }
 
