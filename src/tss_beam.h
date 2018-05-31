@@ -26,7 +26,7 @@ class TransitionSystem;
 // Note: the identifier member is set by the transition system when listing
 // all actions necessary to derive the train set
 struct Action{
-    enum {SHIFT, REDUCE_L, REDUCE_R, REDUCE_U, GAP, IDLE, GHOST_REDUCE, COMPOUND_GAP, NULL_ACTION, MERGE, LABEL, RIGHT, LEFT};
+    enum {SHIFT, REDUCE_L, REDUCE_R, REDUCE_U, GAP, IDLE, GHOST_REDUCE, COMPOUND_GAP, NULL_ACTION, MERGE, LABEL, RIGHT, LEFT, REDUCE};
 
 private:
     int type_;         // shift, etc

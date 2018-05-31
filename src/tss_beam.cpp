@@ -48,20 +48,21 @@ bool Action::operator==(const Action &o)const{
     // use code ?
     if (type_ != o.type_){ return false;}
     switch (type_){
-        case REDUCE_L:
-        case REDUCE_R:
-        case REDUCE_U:
-        case LABEL:
-            return label_ == o.label_;
-        case SHIFT:
-        case GAP:
-        case IDLE:
-        case GHOST_REDUCE:
-        case MERGE:
-            return true;
-        case COMPOUND_GAP:
-            //return order_ == o.order_;
-            return label_ == o.label_;
+    case REDUCE_L:
+    case REDUCE_R:
+    case REDUCE_U:
+    case REDUCE:
+    case LABEL:
+        return label_ == o.label_;
+    case SHIFT:
+    case GAP:
+    case IDLE:
+    case GHOST_REDUCE:
+    case MERGE:
+        return true;
+    case COMPOUND_GAP:
+        //return order_ == o.order_;
+        return label_ == o.label_;
     }
     assert(false);
     return false;
@@ -74,20 +75,21 @@ bool Action::operator!=(const Action &o)const{
 bool Action::operator<(const Action &o)const{
     if (type_ != o.type_) return type_ < o.type_;
     switch (type_){
-        case SHIFT: return false;
-        case REDUCE_L:
-        case REDUCE_R:
-        case REDUCE_U:
-        case LABEL: return label_ < o.label_;
-        case LEFT:
-        case RIGHT:
-        case GAP:
-        case IDLE:
-        case GHOST_REDUCE:
-        case MERGE: return false;
+    case SHIFT: return false;
+    case REDUCE_L:
+    case REDUCE_R:
+    case REDUCE_U:
+    case REDUCE:
+    case LABEL: return label_ < o.label_;
+    case LEFT:
+    case RIGHT:
+    case GAP:
+    case IDLE:
+    case GHOST_REDUCE:
+    case MERGE: return false;
         //case COMPOUND_GAP : return order_ < o.order_;
-        case COMPOUND_GAP : return label_ < o.label_;
-        case NULL_ACTION: return false;
+    case COMPOUND_GAP : return label_ < o.label_;
+    case NULL_ACTION: return false;
     }
     assert(false && "Action::operator< should not be here");
     return false;
@@ -99,19 +101,20 @@ bool Action::is_null()const{
 
 ostream& operator<< (ostream &os, const Action &action){
     switch (action.type_){
-        case Action::SHIFT: return os << "sh" << action.code_;
-        case Action::REDUCE_L: return os << "rl(" << action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
-        case Action::REDUCE_R: return os << "rr(" << action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
-        case Action::REDUCE_U: return os << "ru(" << action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
-        case Action::GAP: return os << "gap" << action.code_;
-        case Action::IDLE: return os << "idle" << action.code_;
-        case Action::GHOST_REDUCE: return os << "gr" << action.code_;
-        case Action::COMPOUND_GAP : return os << "cgap(" << action.label_ << ")" << action.code_;
-        case Action::NULL_ACTION : return os << "NULL_ACTION" << action.code_;
-        case Action::LABEL : return os << "Label("<< action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
-        case Action::MERGE : return os << "merge" << action.code_;
-        case Action::LEFT : return os << "merge left" << action.code_;
-        case Action::RIGHT: return os << "merge right" << action.code_;
+    case Action::SHIFT: return os << "sh" << action.code_;
+    case Action::REDUCE_L: return os << "rl(" << action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
+    case Action::REDUCE_R: return os << "rr(" << action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
+    case Action::REDUCE_U: return os << "ru(" << action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
+    case Action::REDUCE: return os << "r(" << action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
+    case Action::GAP: return os << "gap" << action.code_;
+    case Action::IDLE: return os << "idle" << action.code_;
+    case Action::GHOST_REDUCE: return os << "gr" << action.code_;
+    case Action::COMPOUND_GAP : return os << "cgap(" << action.label_ << ")" << action.code_;
+    case Action::NULL_ACTION : return os << "NULL_ACTION" << action.code_;
+    case Action::LABEL : return os << "Label("<< action.label_ << "=" << enc::hodor.decode_to_str(action.label_,enc::CAT) << ")" << action.code_;
+    case Action::MERGE : return os << "merge" << action.code_;
+    case Action::LEFT : return os << "merge left" << action.code_;
+    case Action::RIGHT: return os << "merge right" << action.code_;
     }
     assert(false);
     return os;

@@ -62,7 +62,8 @@ protected:
 public:
     enum {GAP_TS, CGAP_TS, MERGE_LABEL_TS, SHIFT_REDUCE, LEXICALIZED_MERGE_LABEL_TS,
          MERGE_LABEL_PROJ_TS, LEXICALIZED_MERGE_LABEL_PROJ_TS,
-         MERGE_LABEL_TS_LEX_ORACLE};// transition system identifiers
+         MERGE_LABEL_TS_LEX_ORACLE,
+         UNLEX_SR_GAP};// transition system identifiers
 
     TransitionSystem(int s_id);
     virtual ~TransitionSystem();

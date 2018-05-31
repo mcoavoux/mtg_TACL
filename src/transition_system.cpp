@@ -791,6 +791,7 @@ void TransitionSystem::print_swap_stats(Treebank &tbk_bin, ofstream & outfile, G
 
 
 bool TransitionSystem::is_projective(int transition_system_id){
+    // TODO: update this one
     switch(transition_system_id){
     case GAP_TS: return false;
     case CGAP_TS: return false;
@@ -1009,8 +1010,9 @@ bool GapTS::allowed_gap(ParseState &state){
 /// //////////////////////////////////////////////////////////
 
 
-UnlexicalizedSRGapTS::UnlexicalizedSRGapTS(const Grammar &g){
-    // TODO
+UnlexicalizedSRGapTS::UnlexicalizedSRGapTS(const Grammar &g)
+    :GapTS(g){
+    system_id = UNLEX_SR_GAP;
 }
 
 void UnlexicalizedSRGapTS::compute_derivation(Tree &tree, Derivation &derivation){
