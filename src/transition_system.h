@@ -120,13 +120,12 @@ class GapTS : public TransitionSystem{
 public:
     GapTS(const Grammar &g);
 
-    //int get_id();
 
     Action* get_idle();
 
-    void compute_derivation(Tree &tree, Derivation &derivation);
+    virtual void compute_derivation(Tree &tree, Derivation &derivation);
 
-    bool allowed(ParseState &state, int buffer_size, int i);
+    virtual bool allowed(ParseState &state, int buffer_size, int i);
 
     virtual bool allowed_reduce(ParseState &state, const Action &a, int buffer_size);
 
@@ -137,7 +136,11 @@ public:
 };
 
 class UnlexicalizedSRGapTS : public GapTS{
-    // TODO
+    UnlexicalizedSRGapTS(const Grammar &g);
+    void compute_derivation(Tree &tree, Derivation &derivation);
+    bool allowed(ParseState &state, int buffer_size, int i);
+    bool allowed_reduce(ParseState &state, const Action &a, int buffer_size);
+    bool allowed_gap(ParseState &state);
 };
 
 
@@ -146,8 +149,6 @@ class CompoundGapTS : public TransitionSystem{
     enum {SHIFT_I, GHOST_REDUCE_I, IDLE_I};
 public:
     CompoundGapTS(const Grammar &g);
-
-    //int get_id();
 
     Action* get_idle();
 
@@ -172,8 +173,6 @@ public:
 
     MergeLabelTS(const Grammar &g);
 
-    //int get_id();
-
     Action* get_idle();
 
     virtual void compute_derivation(Tree &tree, Derivation &derivation);
@@ -185,7 +184,7 @@ public:
 };
 
 class MergeLabelTSWithHeadDrivenOracle : public MergeLabelTS{
-    // TODO
+
 public:
     MergeLabelTSWithHeadDrivenOracle(const Grammar &g);
 
@@ -198,8 +197,6 @@ public:
     enum {SHIFT_I, LEFT_I, RIGHT_I, IDLE_I, GAP_I, NULL_ACTION_I};
 
     LexicalizedMergeLabelTS(const Grammar &g);
-
-    //int get_id();
 
     Action* get_idle();
 
@@ -219,7 +216,6 @@ public:
 class ShiftReduce : public GapTS{
 public:
     ShiftReduce(const Grammar &g);
-    //int get_id();
     bool allowed_reduce(ParseState &state, const Action &a, int buffer_size);
     bool allowed_gap(ParseState &state);
 };
@@ -228,14 +224,12 @@ public:
 class MergeLabelProjTS : public MergeLabelTS{
 public:
     MergeLabelProjTS(const Grammar &g);
-    //int get_id();
     bool allowed(ParseState &state, int buffer_size, int i);
 };
 
 class LexicalizedMergeLabelProjTS : public LexicalizedMergeLabelTS{
 public:
     LexicalizedMergeLabelProjTS(const Grammar &g);
-    //int get_id();
     bool allowed(ParseState &state, int buffer_size, int i);
     bool allowed_no_label(ParseState &state, const Action &a, int buffer_size);
 };

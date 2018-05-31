@@ -1010,6 +1010,33 @@ bool GapTS::allowed_gap(ParseState &state){
 }
 
 
+/////////////////////////////////////////////////////////////
+///
+///
+///         Unlexicalized  Shift reduce Gap transition system
+///
+/// //////////////////////////////////////////////////////////
+
+
+UnlexicalizedSRGapTS::UnlexicalizedSRGapTS(const Grammar &g){
+    // TODO
+}
+
+void UnlexicalizedSRGapTS::compute_derivation(Tree &tree, Derivation &derivation){
+    // TODO
+}
+
+bool UnlexicalizedSRGapTS::allowed(ParseState &state, int buffer_size, int i){
+    // TODO
+}
+
+bool UnlexicalizedSRGapTS::allowed_reduce(ParseState &state, const Action &a, int buffer_size){
+    // TODO
+}
+
+bool UnlexicalizedSRGapTS::allowed_gap(ParseState &state){
+    // TODO
+}
 
 //////////////////////////////////////////////////////////
 ///
