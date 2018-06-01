@@ -195,13 +195,13 @@ def main() :
     parser.add_argument("--inputsizedir", type=str, default=None, help="dir for files containing input size (number of attributes) for bi-lstm")
     #parser.add_argument("--suffix", type=str, default="", help="add suffix to training and dev set filenames")
     #parser.add_argument("--transitionsystem", type=str, default="", choices=["gap", "m0", "m1", "m2", "m3"])
-    parser.add_argument("--transitionsystem", type=str, default="", choices=["gap", "m0", "m2", "m4"])
+    parser.add_argument("--transitionsystem", type=str, default="", choices=["gap", "m0", "m2", "m4", "m6"])
     
     args = parser.parse_args()
     
     parameters_list = []
     
-    map_transition_systems = {"" : "", "gap" : "", "m0" : "-m 0", "m1" : "-m 1", "m2" : "-m 2", "m3" : "-m 3", "m4" : "-m 4"}
+    map_transition_systems = {"" : "", "gap" : "", "m0" : "-m 0", "m1" : "-m 1", "m2" : "-m 2", "m3" : "-m 3", "m4" : "-m 4", "m6" : "-m 6"}
     
     def get_params() :
         return {"datadir" : args.datadir,
