@@ -142,12 +142,14 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
                 node->set_h(0);
             else
                 node->set_h(1);
-        }else{
-            assert( (a.type() == Action::REDUCE_R || a.type() == Action::RIGHT) && "This should not happen, TransitionSystem::next");
+        }else if(a.type() == Action::REDUCE_R || a.type() == Action::RIGHT){
+            //assert( (a.type() == Action::REDUCE_R || a.type() == Action::RIGHT) && "This should not happen, TransitionSystem::next");
             if (state->mid_->n->index() < state->top_->n->index())
                 node->set_h(1);
             else
                 node->set_h(0);
+        }else{
+            assert(a.type() == Action::REDUCE);
         }
         newstate =
                 shared_ptr<ParseState>(
@@ -382,6 +384,9 @@ TransitionSystem* TransitionSystem::import_model(const string &outdir){
         break;
     case LEXICALIZED_MERGE_LABEL_PROJ_TS:
         ts = new LexicalizedMergeLabelProjTS(grammar);
+        break;
+    case UNLEX_SR_GAP:
+        ts = new UnlexicalizedSRGapTS(grammar);
         break;
     default:
         assert(false && "Unknown transition system");
@@ -801,6 +806,8 @@ bool TransitionSystem::is_projective(int transition_system_id){
     case LEXICALIZED_MERGE_LABEL_TS: return false;
     case MERGE_LABEL_PROJ_TS: return true;
     case LEXICALIZED_MERGE_LABEL_PROJ_TS: return true;
+    case MERGE_LABEL_TS_LEX_ORACLE: return false;
+    case UNLEX_SR_GAP: return false;
     default:
         cerr << "Error, unknown transition system, aborting" << endl;
         exit(1);
@@ -925,7 +932,6 @@ void GapTS::compute_derivation(Tree &tree, Derivation &derivation){
         deriv[i] = actions[j];
     }
     derivation = Derivation(deriv);
-
 }
 
 
@@ -1017,19 +1023,151 @@ UnlexicalizedSRGapTS::UnlexicalizedSRGapTS(const Grammar &g)
 }
 
 void UnlexicalizedSRGapTS::compute_derivation(Tree &tree, Derivation &derivation){
-    // TODO
+    vector<Action> deriv;
+    vector<shared_ptr<Node>> buffer;
+    tree.get_buffer(buffer);
+
+    vector<shared_ptr<Node>> stack;
+    std::deque<shared_ptr<Node>> deque;
+    int j = 0;
+
+    while (j < buffer.size() ||
+           deque.size() != 1 ||
+           stack.size() > 0  ||
+           ! grammar.is_axiom(deque.back()->label())){
+
+
+        if (stack.size() == 0 && deque.size() == 0){
+            deriv.push_back(actions[SHIFT_I]);
+            shift(stack, deque, buffer, j);
+            continue;
+        }
+
+        shared_ptr<Node> s0 = deque.back();
+        shared_ptr<Node> s0p;
+        s0->get_parent(s0p);
+
+        if (s0p->arity() == 1){
+            assert(deque.size() == 1 && "Error in derivation extraction");
+            deriv.push_back(Action(Action::REDUCE_U, s0p->label(), -1));
+            deque.pop_back();
+            deque.push_back(s0p);
+            continue;
+        }
+
+        if (stack.size() > 0){
+            shared_ptr<Node> s1 = stack.back();
+            shared_ptr<Node> s1p;
+            s1->get_parent(s1p);
+
+            if (s0p == s1p){
+                // CHECK if tmp symbol or real symbol, use only a single tmp symbol
+                stack.pop_back();
+                deque.pop_back();
+                while(deque.size() > 0){
+                    stack.push_back(deque.front());
+                    deque.pop_front();
+                }
+
+                if (s0p->arity() == 2){
+                    deriv.push_back(Action(Action::REDUCE, s0p->label(), -1));
+                    deque.push_back(s0p);
+                }else{
+                    deriv.push_back(Action(Action::MERGE, -1));
+                    vector<shared_ptr<Node>> newchildren;
+                    if (s0->has_label() || s0->is_preterminal()){
+                        newchildren.push_back(s0);
+                    }else{
+                        s0->get_children(newchildren);
+                    }
+                    if (s1->has_label() || s1->is_preterminal()){
+                        newchildren.push_back(s1);
+                    }else{
+                        s1->get_children(newchildren);
+                    }
+                    assert(newchildren.size() > 1);
+                    shared_ptr<Node> node = shared_ptr<Node>(new Node(newchildren));
+                    node->set_parent(s0p);       // intermediary node
+                    deque.push_back(node);
+                }
+                continue;
+            }
+        }
+
+        if (stack.size() > 1){
+            int gaps = -1;
+            // TODO: can use parent ptr instead ?
+            for (int i = 0; i < stack.size(); i++){
+                shared_ptr<Node> candidate = stack[stack.size() - 1 - i];
+                shared_ptr<Node> f1,f2;
+                s0p->get(0,f1);
+                s0p->get(1,f2);
+                if (candidate == f1 || candidate == f2){
+                    gaps = i;
+                    break;
+                }
+            }
+            if (gaps != -1){
+                for (int i = 0; i < gaps; i++){
+                    deriv.push_back(actions[GAP_I]);
+                    deque.push_front(stack.back());
+                    stack.pop_back();
+                }
+                continue;
+            }
+        }
+        deriv.push_back(actions[SHIFT_I]);
+        shift(stack, deque, buffer, j);
+    }
+
+    for (int i = 0; i < deriv.size(); i++){
+        if (encoder.find(deriv[i]) == encoder.end()){
+            add_action(deriv[i]);
+        }
+        int j = encoder[deriv[i]];
+        deriv[i] = actions[j];
+    }
+    derivation = Derivation(deriv);
 }
 
 bool UnlexicalizedSRGapTS::allowed(ParseState &state, int buffer_size, int i){
-    // TODO
+    const Action a = actions[i];
+    switch(a.type()){
+    case Action::SHIFT:
+        return state.is_init() ||
+                (state.buffer_j_ < buffer_size &&
+                 ! (state.last_action_.code() == GAP_I));
+    case Action::MERGE:
+    case Action::REDUCE: return state.top_ != nullptr &&
+                state.mid_ != nullptr &&
+                allowed_reduce(state, a, buffer_size);
+    case Action::REDUCE_U: return state.top_ != nullptr &&
+                allowed_reduce_u(state, a, buffer_size);
+    case Action::GAP:      return state.top_ != nullptr &&
+                state.mid_ != nullptr &&
+                allowed_gap(state);
+    case Action::IDLE:     return state.is_final(grammar, buffer_size);
+    }
+    assert(false && "GapTS: unknown action");
+    return false;
 }
 
 bool UnlexicalizedSRGapTS::allowed_reduce(ParseState &state, const Action &a, int buffer_size){
-    // TODO
+    if (buffer_size == state.buffer_j_ && state.mid_->is_bottom() && state.top_->predecessor == state.mid_){ // if last reduce -> to axiom
+        return grammar.is_axiom(a.label());
+    }
+    if (grammar.is_axiom(a.label())){
+        return buffer_size == state.buffer_j_ &&
+               state.mid_->is_bottom() &&
+               state.top_->predecessor == state.mid_;
+    }
+    return true;
 }
 
 bool UnlexicalizedSRGapTS::allowed_gap(ParseState &state){
-    // TODO
+    if (state.mid_->is_bottom())
+        return false;
+    return true;
 }
 
 //////////////////////////////////////////////////////////

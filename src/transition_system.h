@@ -117,8 +117,9 @@ public:
 
 // Shift, Gap, Idle, RU, RL, RR
 class GapTS : public TransitionSystem{
-    enum {SHIFT_I, GAP_I, IDLE_I};
+
 public:
+    enum {SHIFT_I, GAP_I, IDLE_I};
     GapTS(const Grammar &g);
 
 
@@ -137,6 +138,7 @@ public:
 };
 
 class UnlexicalizedSRGapTS : public GapTS{
+public:
     UnlexicalizedSRGapTS(const Grammar &g);
     void compute_derivation(Tree &tree, Derivation &derivation);
     bool allowed(ParseState &state, int buffer_size, int i);

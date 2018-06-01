@@ -154,6 +154,11 @@ int main(int argc, char *argv[]){
                 options.classifier = Classifier::RNN_LABEL_STRUCTURE;
                 break;
             }
+            case 6:{
+                options.transition_system = TransitionSystem::UNLEX_SR_GAP;
+                options.classifier = Classifier::RNN;
+                break;
+            }
             case 10:{
                 options.transition_system = TransitionSystem::MERGE_LABEL_PROJ_TS;
                 options.classifier = Classifier::RNN_LABEL_STRUCTURE;

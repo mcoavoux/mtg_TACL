@@ -104,6 +104,8 @@ public:
     friend class LexicalizedMergeLabelTS;
     friend class MergeLabelProjTS;
     friend class LexicalizedMergeLabelProjTS;
+    friend class MergeLabelTSWithHeadDrivenOracle;
+    friend class UnlexicalizedSRGapTS;
     friend struct FeatureTemplate;
 
     ParseState();
