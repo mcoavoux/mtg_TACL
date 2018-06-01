@@ -12,17 +12,17 @@
 
 //std::default_random_engine Treebank::random = std::default_random_engine(SEED);
 
-#ifdef WSTRING
+//#ifdef WSTRING
 const String Treebank::LBRACKET = L"(";
 const String Treebank::RBRACKET = L")";
 const String Treebank::EQUAL = L"=";
 const String Treebank::HEAD = L"head";
-#else
-const String Treebank::LBRACKET = "(";
-const String Treebank::RBRACKET = ")";
-const String Treebank::EQUAL = "=";
-const String Treebank::HEAD = "head";
-#endif
+//#else
+//const String Treebank::LBRACKET = "(";
+//const String Treebank::RBRACKET = ")";
+//const String Treebank::EQUAL = "=";
+//const String Treebank::HEAD = "head";
+//#endif
 
 
 Treebank::~Treebank(){}
@@ -185,13 +185,13 @@ void Treebank::read_discbracket_treebank(const string &filename){
     string buffer;
     vector<String> full_corpus;
     while(getline(instream,buffer)){
-#ifdef WSTRING
+//#ifdef WSTRING
         wstring wbuffer = str::decode(buffer);
         full_corpus.push_back(wbuffer);
-#else
-        full_corpus.push_back(buffer);
-        //parse_discbracket_tree(buffer);
-#endif
+//#else
+//        full_corpus.push_back(buffer);
+//        //parse_discbracket_tree(buffer);
+//#endif
     }
     instream.close();
 
@@ -202,11 +202,11 @@ void Treebank::read_discbracket_treebank(const string &filename){
 #if DEBUG
         cerr << "{";
         for (auto &it : field_freqs[0]){
-#ifdef WSTRING
+//#ifdef WSTRING
             cerr << str::encode(it.first) << ":" << it.second << ", ";
-#else
-            cerr << it.first << ":" << it.second << ", ";
-#endif
+//#else
+//            cerr << it.first << ":" << it.second << ", ";
+//#endif
         }cerr << "}" << endl;
 #endif
         encode_known_from_freqs();
@@ -379,7 +379,7 @@ void Treebank::read_tbk_treebank(const string &filename, bool train_set){
     field_freqs.resize(header.size());
 
     vector<String> all_sentences;
-#ifdef WSTRING
+//#ifdef WSTRING
     while(getline(instream, buffer)){
         wstring wbuffer = str::decode(buffer);
         boost::trim(wbuffer);
@@ -387,14 +387,14 @@ void Treebank::read_tbk_treebank(const string &filename, bool train_set){
             all_sentences.push_back(wbuffer);
         }
     }
-#else
-    while(getline(instream, buffer)){
-        boost::trim(buffer);
-        if (buffer.size() > 0){
-            all_sentences.push_back(buffer);
-        }
-    }
-#endif
+//#else
+//    while(getline(instream, buffer)){
+//        boost::trim(buffer);
+//        if (buffer.size() > 0){
+//            all_sentences.push_back(buffer);
+//        }
+//    }
+//#endif
     int idx = 0;
     while (idx < all_sentences.size()){
         int end = find_closing_bracket(idx, all_sentences);
@@ -514,7 +514,7 @@ void Treebank::read_old_tbk_treebank(const string &filename, bool train_set){
     field_freqs.resize(header.size());
 
     vector<String> all_sentences;
-#ifdef WSTRING
+//#ifdef WSTRING
     while(getline(instream, buffer)){
         wstring wbuffer = str::decode(buffer);
         boost::trim(wbuffer);
@@ -522,14 +522,14 @@ void Treebank::read_old_tbk_treebank(const string &filename, bool train_set){
             all_sentences.push_back(wbuffer);
         }
     }
-#else
-    while(getline(instream, buffer)){
-        boost::trim(buffer);
-        if (buffer.size() > 0){
-            all_sentences.push_back(buffer);
-        }
-    }
-#endif
+//#else
+//    while(getline(instream, buffer)){
+//        boost::trim(buffer);
+//        if (buffer.size() > 0){
+//            all_sentences.push_back(buffer);
+//        }
+//    }
+//#endif
     int idx = 0;
     while (idx < all_sentences.size()){
         int end = find_closing_bracket(idx, all_sentences, "-");
@@ -660,7 +660,7 @@ int Treebank::find_closing_bracket(int i, const vector<String> &sentence, string
     get_xml_label(sentence[i], close_label, head_sep);
 #ifdef DEBUG
     if (label != close_label){
-#ifdef WSTRING
+//#ifdef WSTRING
         cerr << "Sent: " << endl;
         for (int i = 0; i < sentence.size(); i++){
             cerr << str::encode(sentence[i]) << endl;
@@ -669,14 +669,14 @@ int Treebank::find_closing_bracket(int i, const vector<String> &sentence, string
              << str::encode(label) << "   "
              << str::encode(close_label) << endl;
     }
-#else
-        cerr << "Sent: " << endl;
-        for (int i = 0; i < sentence.size(); i++){
-            cerr << sentence[i]<< endl;
-        }cerr << endl;
-        cerr << "      label= " << label << "   "  << close_label << endl;
-    }
-#endif
+//#else
+//        cerr << "Sent: " << endl;
+//        for (int i = 0; i < sentence.size(); i++){
+//            cerr << sentence[i]<< endl;
+//        }cerr << endl;
+//        cerr << "      label= " << label << "   "  << close_label << endl;
+//    }
+//#endif
 #endif
     assert(label == close_label);
     return i;
@@ -805,7 +805,7 @@ void Treebank::read_raw_input_sentences_tbk(
 
     vector<String> tokens;
     while (getline(is, buffer)){
-#ifdef WSTRING
+//#ifdef WSTRING
         wstring wbuffer = str::decode(buffer);
         boost::trim(wbuffer);
         str::split(wbuffer, " \t", "", tokens);
@@ -821,22 +821,22 @@ void Treebank::read_raw_input_sentences_tbk(
                 sentence.push_back(tokens);
             }
         }
-#else
-        boost::trim(buffer);
-        str::split(buffer, " \t", "", tokens);
-        if (buffer.size() == 0 && sentence.size() > 0){
-            read_raw_sentence_tbk(sentence, raw_test, str_sentences, unknown);
-            sentence.clear();
-        }else{
-            if (tokens.size() > 0){
-                if (tokens.size() == 1){
-                    tokens.push_back("UNKNOWN");
-                }
-                assert(tokens.size() == header.size());
-                sentence.push_back(tokens);
-            }
-        }
-#endif
+//#else
+//        boost::trim(buffer);
+//        str::split(buffer, " \t", "", tokens);
+//        if (buffer.size() == 0 && sentence.size() > 0){
+//            read_raw_sentence_tbk(sentence, raw_test, str_sentences, unknown);
+//            sentence.clear();
+//        }else{
+//            if (tokens.size() > 0){
+//                if (tokens.size() == 1){
+//                    tokens.push_back("UNKNOWN");
+//                }
+//                assert(tokens.size() == header.size());
+//                sentence.push_back(tokens);
+//            }
+//        }
+//#endif
     }
 }
 
@@ -883,12 +883,12 @@ void Treebank::read_raw_input_sentences_discbracket(
     while (getline(is, buffer)){
         vector<shared_ptr<Node>> sent;
         vector<pair<String,String>> str_sent;
-#ifdef WSTRING
+//#ifdef WSTRING
         wstring wbuffer = str::decode(buffer);
         read_raw_sentence_discbracket(wbuffer, sent, str_sent, unknown);
-#else
-        read_raw_sentence_discbracket(buffer, sent, str_sent, unknown);
-#endif
+//#else
+//        read_raw_sentence_discbracket(buffer, sent, str_sent, unknown);
+//#endif
         raw_test.push_back(sent);
         str_sentences.push_back(str_sent);
     }
@@ -954,11 +954,11 @@ void Treebank::test_raw_sentence_reading(const string &filename){
             string stag = enc::hodor.decode_to_str(tag, enc::CAT);
             string stok = enc::hodor.decode_to_str(tok, enc::TOK);
             if (tok == enc::UNKNOWN){
-#ifdef WSTRING
+//#ifdef WSTRING
                 stok = str::encode(str_sentences[i][j].first);
-#else
-                stok = str_sentences[i][j].first;
-#endif
+//#else
+//                stok = str_sentences[i][j].first;
+//#endif
             }
             out1 << stok << "/" << stag << " ";
         }out1 << endl;
@@ -967,12 +967,12 @@ void Treebank::test_raw_sentence_reading(const string &filename){
     ofstream out2(filename+"_foo2");
     for (int i = 0; i < str_sentences.size(); i++){
         for (int j = 0; j < str_sentences[i].size(); j++){
-#ifdef WSTRING
+//#ifdef WSTRING
             out2 << str::encode(str_sentences[i][j].first) << "/"
                  << str::encode(str_sentences[i][j].second) << " ";
-#else
-            out2 << str_sentences[i][j].first << "/" << str_sentences[i][j].second << " ";
-#endif
+//#else
+//            out2 << str_sentences[i][j].first << "/" << str_sentences[i][j].second << " ";
+//#endif
         }out2 << endl;
     }
     out2.close();
@@ -1031,11 +1031,11 @@ bool Treebank::is_head(String &s, string sep){
     if (splits.back() == HEAD){
         if (splits.size() == 3){
             s = splits[0] + splits[1];
-#ifdef WSTRING
+//#ifdef WSTRING
             cerr << "Warning. Encountered: " << str::encode(s) << " while reading treebank" << endl;
-#else
-            cerr << "Warning. Encountered: " << s << " while reading treebank" << endl;
-#endif
+//#else
+//            cerr << "Warning. Encountered: " << s << " while reading treebank" << endl;
+//#endif
         }else{
             assert(splits.size() == 2);
             s = splits[0];

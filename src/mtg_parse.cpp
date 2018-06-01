@@ -118,7 +118,9 @@ int main(int argc, char *argv[]){
 
     bool unlexicalised = (mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_TS
                           || mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_TS_LEX_ORACLE
-                          || mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_PROJ_TS);
+                          || mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_PROJ_TS
+                          || mtg.get_transition_system_id() == TransitionSystem::MERGE_LABEL_PROJ_TS
+                          || mtg.get_transition_system_id() == TransitionSystem::UNLEX_SR_GAP);
 
     if (! options.output_file.empty() && ! options.test_file.empty()){
 
@@ -179,11 +181,11 @@ int main(int argc, char *argv[]){
             int n_tokens = 0;
 
             while(std::getline(input_file, bline)){
-#ifdef WSTRING
+//#ifdef WSTRING
                 line = str::decode(bline);
-#else
-                line = bline;
-#endif
+//#else
+//                line = bline;
+//#endif
                 vector<std::pair<String,String>> raw_str;
                 vector<String> tokens;
 
@@ -222,11 +224,11 @@ int main(int argc, char *argv[]){
     }else{
 
         while(std::getline(cin, bline)){
-#ifdef WSTRING
+//#ifdef WSTRING
             line = str::decode(bline);
-#else
-            line = bline;
-#endif
+//#else
+//            line = bline;
+//#endif
 
             vector<String> tokens;
             vector<shared_ptr<Node>> sentence;

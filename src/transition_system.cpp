@@ -1069,27 +1069,27 @@ void UnlexicalizedSRGapTS::compute_derivation(Tree &tree, Derivation &derivation
                     deque.pop_front();
                 }
 
-                if (s0p->arity() == 2){
+                vector<shared_ptr<Node>> newchildren;
+                if (s0->has_label() || s0->is_preterminal()){
+                    newchildren.push_back(s0);
+                }else{
+                    s0->get_children(newchildren);
+                }
+                if (s1->has_label() || s1->is_preterminal()){
+                    newchildren.push_back(s1);
+                }else{
+                    s1->get_children(newchildren);
+                }
+                if (newchildren.size() == s0p->arity()){
                     deriv.push_back(Action(Action::REDUCE, s0p->label(), -1));
                     deque.push_back(s0p);
                 }else{
                     deriv.push_back(Action(Action::MERGE, -1));
-                    vector<shared_ptr<Node>> newchildren;
-                    if (s0->has_label() || s0->is_preterminal()){
-                        newchildren.push_back(s0);
-                    }else{
-                        s0->get_children(newchildren);
-                    }
-                    if (s1->has_label() || s1->is_preterminal()){
-                        newchildren.push_back(s1);
-                    }else{
-                        s1->get_children(newchildren);
-                    }
-                    assert(newchildren.size() > 1);
                     shared_ptr<Node> node = shared_ptr<Node>(new Node(newchildren));
                     node->set_parent(s0p);       // intermediary node
                     deque.push_back(node);
                 }
+//                }
                 continue;
             }
         }
@@ -1099,10 +1099,9 @@ void UnlexicalizedSRGapTS::compute_derivation(Tree &tree, Derivation &derivation
             // TODO: can use parent ptr instead ?
             for (int i = 0; i < stack.size(); i++){
                 shared_ptr<Node> candidate = stack[stack.size() - 1 - i];
-                shared_ptr<Node> f1,f2;
-                s0p->get(0,f1);
-                s0p->get(1,f2);
-                if (candidate == f1 || candidate == f2){
+                shared_ptr<Node> par_candidate;
+                candidate->get_parent(par_candidate);
+                if (par_candidate == s0p){
                     gaps = i;
                     break;
                 }
@@ -1116,6 +1115,7 @@ void UnlexicalizedSRGapTS::compute_derivation(Tree &tree, Derivation &derivation
                 continue;
             }
         }
+        assert(j < buffer.size());
         deriv.push_back(actions[SHIFT_I]);
         shift(stack, deque, buffer, j);
     }

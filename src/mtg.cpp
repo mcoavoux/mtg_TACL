@@ -281,7 +281,8 @@ int main(int argc, char *argv[]){
 
     grammar.mark_punct();
     if (options.transition_system == TransitionSystem::MERGE_LABEL_TS
-            ||options.transition_system == TransitionSystem::MERGE_LABEL_PROJ_TS){
+            ||options.transition_system == TransitionSystem::MERGE_LABEL_PROJ_TS
+            ||options.transition_system == TransitionSystem::UNLEX_SR_GAP){
         grammar.do_not_binarise();
     }
 

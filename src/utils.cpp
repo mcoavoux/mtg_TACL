@@ -7,13 +7,13 @@ namespace enc{
 TypedStrEncoder hodor;
 
 StrDict::StrDict() : size_(0){
-#ifdef WSTRING
+//#ifdef WSTRING
     code(L"UNKNOWN");
     code(L"UNDEF");
-#else
-    code("UNKNOWN");
-    code("UNDEF");
-#endif
+//#else
+//    code("UNKNOWN");
+//    code("UNDEF");
+//#endif
 }
 
 STRCODE StrDict::code(String s){
@@ -47,11 +47,11 @@ int StrDict::size(){
 
 ostream & operator<<(ostream &os, StrDict &ts){
     for (int i = 0; i < ts.decoder.size(); i++){
-#ifdef WSTRING
+//#ifdef WSTRING
         os << str::encode(ts.decoder[i]) << endl;
-#else
-        os << ts.decoder[i] << endl;
-#endif
+//#else
+//        os << ts.decoder[i] << endl;
+//#endif
     }
     return os;
 }
@@ -90,11 +90,11 @@ String TypedStrEncoder::decode(STRCODE i, int type){
 }
 
 string TypedStrEncoder::decode_to_str(STRCODE i, int type){
-#ifdef WSTRING
+//#ifdef WSTRING
     return str::encode(decode(i,type));
-#else
-    return decode(i,type);
-#endif
+//#else
+//    return decode(i,type);
+//#endif
 }
 
 int TypedStrEncoder::size(int type){
@@ -145,7 +145,7 @@ void TypedStrEncoder::import_model(const string &outdir){
 
         string buf;
         getline(ist,buf);
-#ifdef WSTRING
+//#ifdef WSTRING
         wstring wbuf = str::decode(buf);
         assert(wbuf == decode(UNKNOWN,i));
         getline(ist, buf);
@@ -155,14 +155,14 @@ void TypedStrEncoder::import_model(const string &outdir){
             wbuf = str::decode(buf);
             code(wbuf, i);
         }
-#else
-        assert(buf == decode(UNKNOWN,i));
-        getline(ist,buf);
-        assert(buf == decode(UNDEF,i));
-        while (getline(ist,buf)){
-            code(buf, i);
-        }
-#endif
+//#else
+//        assert(buf == decode(UNKNOWN,i));
+//        getline(ist,buf);
+//        assert(buf == decode(UNDEF,i));
+//        while (getline(ist,buf)){
+//            code(buf, i);
+//        }
+//#endif
         ist.close();
     }
     is.close();

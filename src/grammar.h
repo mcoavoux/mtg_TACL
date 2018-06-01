@@ -35,15 +35,15 @@ class Node;
 class Grammar{
 public:
     static const int MAX_SIZE = 3000;            // assume there are at most MAX_SIZE non terminals (including tags). Most languages: 300 should be enough, German SPMRL -> 2000, Korean SPMRL -> 3000
-#ifdef WSTRING
+//#ifdef WSTRING
     static constexpr Char UNARY_CODE = L'@';     // unary chains symbols e.g. S@NP
     static constexpr Char TMP_CODE = L':';       // temporary symbols, e.g. NP:
     static constexpr Char DOLLAR = L'$';
-#else
-    static constexpr Char UNARY_CODE = '@';     // unary chains symbols e.g. S@NP
-    static constexpr Char TMP_CODE = ':';       // temporary symbols, e.g. NP:
-    static constexpr Char DOLLAR = '$';
-#endif
+//#else
+//    static constexpr Char UNARY_CODE = '@';     // unary chains symbols e.g. S@NP
+//    static constexpr Char TMP_CODE = ':';       // temporary symbols, e.g. NP:
+//    static constexpr Char DOLLAR = '$';
+//#endif
 private:
     vector<bool> axioms;    // true if symbol is axiom
     vector<bool> tmps;      // true if symbol is tmp

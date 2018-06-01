@@ -400,17 +400,17 @@ void Node::write(ostream &os, vector<std::pair<String, String>> &str_sentences){
         }else{
             token = enc::hodor.decode(get_field(Leaf::FIELD_TOK), enc::TOK);
         }
-#ifdef WSTRING
+//#ifdef WSTRING
         os << "(" << str::encode(postag)
            << " " << index()
            << "=" << str::encode(token)
            << ")";
-#else
-        os << "(" << postag
-           << " " << index()
-           << "=" << token
-           << ")";
-#endif
+//#else
+//        os << "(" << postag
+//           << " " << index()
+//           << "=" << token
+//           << ")";
+//#endif
     }else{
         os << "(" << enc::hodor.decode_to_str(label(), enc::CAT);
         for (auto &it : children_){
@@ -630,7 +630,7 @@ void Tree::write_conll(ostream &os, vector<std::pair<String, String>> &str_sente
 
     for (int i = 0; i < leafs.size(); i++){
         //1	Joan	joan	ADI	SIN	ADM=PART|ASP=BURU	3	cmod	_	_
-#ifdef WSTRING
+//#ifdef WSTRING
         os << (i+1)
            << t << str::encode(str_sentences[i].first)
            << t << "_"
@@ -642,19 +642,19 @@ void Tree::write_conll(ostream &os, vector<std::pair<String, String>> &str_sente
            << t << "_"
            << t << "_"
            << endl;
-#else
-        os << (i+1)
-           << t << str_sentences[i].first
-           << t << "_"
-           << t << enc::hodor.decode_to_str(leafs[i]->label(), enc::CAT)
-           << t << enc::hodor.decode_to_str(leafs[i]->label(), enc::CAT)
-           << t << leafs[i]->morpho_repr()
-           << t << (dtree[i] + 1)
-           << t << enc::hodor.decode(leafs[i]->dlabel(), deprel_idx+1) // +1 because first encoder is for non terminal
-           << t << "_"
-           << t << "_"
-           << endl;
-#endif
+//#else
+//        os << (i+1)
+//           << t << str_sentences[i].first
+//           << t << "_"
+//           << t << enc::hodor.decode_to_str(leafs[i]->label(), enc::CAT)
+//           << t << enc::hodor.decode_to_str(leafs[i]->label(), enc::CAT)
+//           << t << leafs[i]->morpho_repr()
+//           << t << (dtree[i] + 1)
+//           << t << enc::hodor.decode(leafs[i]->dlabel(), deprel_idx+1) // +1 because first encoder is for non terminal
+//           << t << "_"
+//           << t << "_"
+//           << endl;
+//#endif
     }
 }
 

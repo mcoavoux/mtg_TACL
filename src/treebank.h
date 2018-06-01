@@ -45,15 +45,15 @@ class Treebank{
     static const String EQUAL;
     static const String HEAD;
 
-#ifdef WSTRING
+//#ifdef WSTRING
     static constexpr Char LANGLE = L'<';
     static constexpr Char RANGLE = L'>';
     static constexpr Char SLASH = L'/';
-#else
-    static constexpr Char LANGLE = '<';
-    static constexpr Char RANGLE = '>';
-    static constexpr Char SLASH = '/';
-#endif
+//#else
+//    static constexpr Char LANGLE = '<';
+//    static constexpr Char RANGLE = '>';
+//    static constexpr Char SLASH = '/';
+//#endif
 
 public:
     friend struct TreebankStats;

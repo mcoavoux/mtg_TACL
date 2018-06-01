@@ -363,11 +363,11 @@ void HeadRules::parse_line(const string &buffer){
     vector<string> tokens;
     str::split(buffer, " ", "", tokens);
     if (tokens.size() < 2) return;
-#ifdef WSTRING
+//#ifdef WSTRING
     STRCODE code = enc::hodor.code(str::decode(tokens[0]), enc::CAT);
-#else
-    STRCODE code = enc::hodor.code(tokens[0], enc::CAT);
-#endif
+//#else
+//    STRCODE code = enc::hodor.code(tokens[0], enc::CAT);
+//#endif
     int direction = -1;
     if (tokens[1].compare("LEFT-TO-RIGHT") == 0){
         direction = LEFT_TO_RIGHT;
@@ -378,11 +378,11 @@ void HeadRules::parse_line(const string &buffer){
     }
     vector<STRCODE> priority;
     for (int i = 2; i < tokens.size(); i++){
-#ifdef WSTRING
+//#ifdef WSTRING
         priority.push_back(enc::hodor.code(str::decode(tokens[i]), enc::CAT));
-#else
-        priority.push_back(enc::hodor.code(tokens[i], enc::CAT));
-#endif
+//#else
+//        priority.push_back(enc::hodor.code(tokens[i], enc::CAT));
+//#endif
     }
     RulePriority rp(direction, priority);
     add(code, rp);
