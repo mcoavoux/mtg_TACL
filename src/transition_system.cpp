@@ -129,7 +129,6 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
     case Action::REDUCE_R:
     case Action::LEFT:
     case Action::RIGHT:
-    case Action::REDUCE:
     {
         shared_ptr<StackItem> newbranch;
         state->grow_new_branch(newbranch);
@@ -149,7 +148,8 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
             else
                 node->set_h(0);
         }else{
-            assert(a.type() == Action::REDUCE);
+            //assert(a.type() == Action::REDUCE);
+            assert(false);
         }
         newstate =
                 shared_ptr<ParseState>(
@@ -233,6 +233,7 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
         return;
     }
     case Action::MERGE:
+    case Action::REDUCE:
     {
         shared_ptr<StackItem> newbranch;
         state->grow_new_branch(newbranch);
@@ -256,7 +257,7 @@ void TransitionSystem::next(const shared_ptr<ParseState> &state,
             state->top_->n->get_children(newchildren);
         }
         assert(newchildren.size() > 1);
-        shared_ptr<Node> node(new Node(newchildren));
+        shared_ptr<Node> node(new Node(a.label(), newchildren));
         newstate =
                 shared_ptr<ParseState>(
                     new ParseState(
