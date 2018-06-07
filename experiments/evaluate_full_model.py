@@ -165,7 +165,22 @@ def generate_const_results(results, mapping, write=sys.stderr.write) :
         write("    Transition System & Features  & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
         write("    \\midrule\n")
         
-        for model_type in ["gap_unlex_uncat", "gap_unlex", "gap_lex_uncat", "gap_lex", "merge0_unlex_uncat", "merge0_unlex", "merge2_unlex_uncat", "merge2_unlex", "merge2_lex_uncat", "merge2_lex"]:
+        list_models = ["gap_unlex_uncat",
+                       "gap_unlex",
+                       "gap_lex_uncat",
+                       "gap_lex",
+                       "usr6_unlex_uncat",
+                       "usr6_unlex",
+                       "merge0_unlex_uncat",
+                       "merge0_unlex",
+                       "merge4_unlex_uncat",
+                       "merge4_unlex",
+                       "merge2_unlex_uncat",
+                       "merge2_unlex",
+                       "merge2_lex_uncat",
+                       "merge2_lex"]
+            
+        for model_type in list_models:
         #for model_type in ["gap_lex", "gap_unlex", "merge0_unlex", "merge1_unlex", "merge2_lex", "merge2_unlex", "merge3_lex", "merge3_unlex"] :
             mod = mapping[model_type]
             res_by_lang = []
@@ -251,10 +266,17 @@ if __name__ == "__main__" :
             "merge0_unlex_uncat" : "\\textsc{ml-gap}          & \\textsc" + features[0],
             "merge0_unlex"       : "\\textsc{ml-gap}          & \\textsc" + features[2],
 
+            "merge4_unlex_uncat" : "\\textsc{ml-gap} (lex oracle)& \\textsc" + features[0],
+            "merge4_unlex"       : "\\textsc{ml-gap} (lex oracle)& \\textsc" + features[2],
+
+            "usr6_unlex_uncat" : "\\textsc{sr-gap-unlex} & \\textsc" + features[0],
+            "usr6_unlex"       : "\\textsc{sr-gap-unlex} & \\textsc" + features[2],
+
             "merge2_unlex_uncat" : "\\textsc{ml-gap-lex}      & \\textsc" + features[0],
             "merge2_lex_uncat"   : "\\textsc{ml-gap-lex}      & \\textsc" + features[1],
             "merge2_unlex"       : "\\textsc{ml-gap-lex}      & \\textsc" + features[2],
             "merge2_lex"         : "\\textsc{ml-gap-lex}      & \\textsc" + features[3]}
+
     
     results = get_all_results(args.datadir, args.expedir)
     
