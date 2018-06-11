@@ -157,12 +157,12 @@ def generate_const_results(results, mapping, write=sys.stderr.write) :
         write("---------------{}----------------------\n".format(TYPENAME))
         write("                                          \n")
         #write("\\begin{tabular}{ll cc cc cc cc}\n")
-        write("\\begin{tabular}{ll cc cc cc}\n")
+        write("\\begin{tabular}{lll cc cc cc}\n")
         write("    \\toprule\n")
         #write("    &&\\multicolumn{2}{c}{English} & \\multicolumn{2}{c}{German (Tiger)} & \\multicolumn{2}{c}{German (Negra)} & \\multicolumn{2}{c}{French} \\\\\n")
-        write("    &&\\multicolumn{2}{c}{English} & \\multicolumn{2}{c}{German (Tiger)} & \\multicolumn{2}{c}{German (Negra)} \\\\\n")
+        write("    &&&\\multicolumn{2}{c}{English} & \\multicolumn{2}{c}{German (Tiger)} & \\multicolumn{2}{c}{German (Negra)} \\\\\n")
         #write("    Transition System & Features  & F & Disc. F & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
-        write("    Transition System & Features  & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
+        write("    Transition System & Features & Oracle  & F & Disc. F & F & Disc. F & F & Disc. F \\\\\n")
         write("    \\midrule\n")
         
         list_models = ["gap_unlex_uncat",
@@ -254,28 +254,30 @@ if __name__ == "__main__" :
     parser.add_argument("expedir", type = str, help="root of expe dir")
     
     args = parser.parse_args()
+    
+    oracles = ["head-driven", "eager"]
 
     features = ["{base}", "{+lex}", "{+nt}", "{+nt+lex}"]
     
     mapping={"dptb" : "English", "ftb" : "French", "tiger_spmrl" : "German (Tiger)", "negra" : "German (Negra)",
-            "gap_unlex_uncat"    : "\\textsc{sr-gap}          & \\textsc" + features[0],
-            "gap_lex_uncat"      : "\\textsc{sr-gap}          & \\textsc" + features[1],
-            "gap_unlex"          : "\\textsc{sr-gap}          & \\textsc" + features[2],
-            "gap_lex"            : "\\textsc{sr-gap}          & \\textsc" + features[3],
+            "gap_unlex_uncat"    : "\\textsc{sr-gap}          & \\textsc" + features[0] + " & {} ".format(oracles[0]),
+            "gap_lex_uncat"      : "\\textsc{sr-gap}          & \\textsc" + features[1] + " & {} ".format(oracles[0]),
+            "gap_unlex"          : "\\textsc{sr-gap}          & \\textsc" + features[2] + " & {} ".format(oracles[0]),
+            "gap_lex"            : "\\textsc{sr-gap}          & \\textsc" + features[3] + " & {} ".format(oracles[0]),
         
-            "merge0_unlex_uncat" : "\\textsc{ml-gap}          & \\textsc" + features[0],
-            "merge0_unlex"       : "\\textsc{ml-gap}          & \\textsc" + features[2],
+            "merge0_unlex_uncat" : "\\textsc{ml-gap}          & \\textsc" + features[0] + " & {} ".format(oracles[1]),
+            "merge0_unlex"       : "\\textsc{ml-gap}          & \\textsc" + features[2] + " & {} ".format(oracles[1]),
 
-            "merge4_unlex_uncat" : "\\textsc{ml-gap} (lex oracle)& \\textsc" + features[0],
-            "merge4_unlex"       : "\\textsc{ml-gap} (lex oracle)& \\textsc" + features[2],
+            "merge4_unlex_uncat" : "\\textsc{ml-gap} & \\textsc" + features[0] + " & {} ".format(oracles[0]),
+            "merge4_unlex"       : "\\textsc{ml-gap} & \\textsc" + features[2] + " & {} ".format(oracles[0]),
 
-            "usr6_unlex_uncat" : "\\textsc{sr-gap-unlex} & \\textsc" + features[0],
-            "usr6_unlex"       : "\\textsc{sr-gap-unlex} & \\textsc" + features[2],
+            "usr6_unlex_uncat" : "\\textsc{sr-gap-unlex} & \\textsc" + features[0] + " & {} ".format(oracles[1]),
+            "usr6_unlex"       : "\\textsc{sr-gap-unlex} & \\textsc" + features[2] + " & {} ".format(oracles[1]),
 
-            "merge2_unlex_uncat" : "\\textsc{ml-gap-lex}      & \\textsc" + features[0],
-            "merge2_lex_uncat"   : "\\textsc{ml-gap-lex}      & \\textsc" + features[1],
-            "merge2_unlex"       : "\\textsc{ml-gap-lex}      & \\textsc" + features[2],
-            "merge2_lex"         : "\\textsc{ml-gap-lex}      & \\textsc" + features[3]}
+            "merge2_unlex_uncat" : "\\textsc{ml-gap-lex}      & \\textsc" + features[0] + " & {} ".format(oracles[1]),
+            "merge2_lex_uncat"   : "\\textsc{ml-gap-lex}      & \\textsc" + features[1] + " & {} ".format(oracles[1]),
+            "merge2_unlex"       : "\\textsc{ml-gap-lex}      & \\textsc" + features[2] + " & {} ".format(oracles[1]),
+            "merge2_lex"         : "\\textsc{ml-gap-lex}      & \\textsc" + features[3] + " & {} ".format(oracles[1])}
 
     
     results = get_all_results(args.datadir, args.expedir)
