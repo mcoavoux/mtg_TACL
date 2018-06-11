@@ -189,7 +189,7 @@ def generate_const_results(results, mapping, write=sys.stderr.write) :
                 res_by_lang.extend(list(d[model_type][language]))
             #print(res_by_lang)
             #print(" & ".join([str(round(x, 2)) for x in res_by_lang]))
-            write("    {} & {} \\\\\n".format(mod, " & ".join([str(round(x, 2)) for x in res_by_lang])))
+            write("    {} & {} \\\\\n".format(mod, " & ".join([str(round(x, 1)) for x in res_by_lang])))
         
         write("    \\bottomrule\n")
         write("\\end{tabular}\n")
