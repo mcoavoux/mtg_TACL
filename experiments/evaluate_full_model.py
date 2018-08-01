@@ -274,10 +274,10 @@ if __name__ == "__main__" :
             "usr6_unlex_uncat" : "\\textsc{sr-gap-unlex} & \\textsc" + features[0] + " & {} ".format(oracles[1]),
             "usr6_unlex"       : "\\textsc{sr-gap-unlex} & \\textsc" + features[2] + " & {} ".format(oracles[1]),
 
-            "merge2_unlex_uncat" : "\\textsc{ml-gap-lex}      & \\textsc" + features[0] + " & {} ".format(oracles[1]),
-            "merge2_lex_uncat"   : "\\textsc{ml-gap-lex}      & \\textsc" + features[1] + " & {} ".format(oracles[1]),
-            "merge2_unlex"       : "\\textsc{ml-gap-lex}      & \\textsc" + features[2] + " & {} ".format(oracles[1]),
-            "merge2_lex"         : "\\textsc{ml-gap-lex}      & \\textsc" + features[3] + " & {} ".format(oracles[1])}
+            "merge2_unlex_uncat" : "\\textsc{ml-gap-lex}      & \\textsc" + features[0] + " & {} ".format(oracles[0]),
+            "merge2_lex_uncat"   : "\\textsc{ml-gap-lex}      & \\textsc" + features[1] + " & {} ".format(oracles[0]),
+            "merge2_unlex"       : "\\textsc{ml-gap-lex}      & \\textsc" + features[2] + " & {} ".format(oracles[0]),
+            "merge2_lex"         : "\\textsc{ml-gap-lex}      & \\textsc" + features[3] + " & {} ".format(oracles[0])}
 
     
     results = get_all_results(args.datadir, args.expedir)
