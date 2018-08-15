@@ -203,7 +203,8 @@ def generate_morph_results(results, mapping, write=sys.stderr.write) :
         
         model_type = results[lang][2]["model type"]
         
-        if model_type == "merge0_unlex" :
+        if model_type == "merge0_unlex_uncat" :
+        #if model_type == "usr6_unlex_uncat":
             language = results[lang][2]["lang"]
             
             morph_results = results[lang][0]["morph"]
@@ -219,8 +220,8 @@ def generate_morph_results(results, mapping, write=sys.stderr.write) :
     at_map = {"s": "subcat", "t":"tense", "n":"number", "m":"mood", "component": "mwe", "mwehead":"mwe-head", "p":"person", "g": "gender"}
     
     for language in sorted(d) :
-        pos = round(d[language]["fpos"] * 100, 2)
-        c_match = round(d[language]["complete_match"] * 100, 2)
+        pos = round(d[language]["fpos"] * 100, 1)
+        c_match = round(d[language]["complete_match"] * 100, 1)
         write("    \\midrule\n")
         write("    \\multicolumn{4}{c}{"+mapping[language]+"}\\\\ \n")
         write("    \\midrule\n")
@@ -229,9 +230,9 @@ def generate_morph_results(results, mapping, write=sys.stderr.write) :
             write("    Complete match & {} & {} & {} \\\\\n".format(c_match, "-", 100))
             for attribute in sorted(d[language]["list"], key = lambda x : ("component" in x or "mwe" in x, x)) :
                 full_at = at_map[attribute] if attribute in at_map else attribute
-                acc = round(d[language]["morph {} accuracy".format(attribute)] * 100, 2)
-                f1  = round(d[language]["morph {} f-measure".format(attribute)] * 100, 2)
-                cov = round(d[language]["morph {} coverage".format(attribute)] * 100, 2)
+                acc = round(d[language]["morph {} accuracy".format(attribute)] * 100, 1)
+                f1  = round(d[language]["morph {} f-measure".format(attribute)] * 100, 1)
+                cov = round(d[language]["morph {} coverage".format(attribute)] * 100, 1)
                 write("    {} & {} & {} & {} \\\\\n".format(full_at, acc, f1, cov))
         
         
