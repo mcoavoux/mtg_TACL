@@ -3,16 +3,6 @@
 
 Multilingual discontinuous constituency parsing.
 
-If you use this version in the context of a publication please cite:
-
-    @phdthesis{coavoux-phd-thesis,
-      author = {Coavoux, Maximin},
-      school = {Univ Paris Diderot, Sorbonne Paris Cit\'{e}},
-      title = {Discontinuous Constituency Parsing of Morphologically Rich Languages},
-      year = 2017
-    }
-
-
 # Compile
 
 Download headers for Eigen and Boost:
@@ -39,11 +29,9 @@ of `wchar_t`, which will confuse the character bi-lstm.
 
 # Parse with pretrained models:
 
-Pretrained models are in `pretrained_models_disco` for discontinuous constituency parsing
-(English, German, French) and `pretrained_models_projective` for projective
-constituency parsing (9 languages of the SPMRL dataset).
-`ml_gap_lex` and `ml_lex` refer to lexicalized transition systems,
-whereas `ml_gap` and `ml` are non lexicalized.
+Pretrained models whose results are presented in the paper (Table 4) are in the `pretrained` folder.
+
+Use `sh reparse.sh <path to data folder multilingual_disco_data/data>` to reparse the development set with each model.
 
 
 ### Parse a bunch of files
