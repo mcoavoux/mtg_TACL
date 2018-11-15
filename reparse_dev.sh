@@ -24,6 +24,8 @@ for ts in $t1 $t2 $t3 $t4 $t5 $t6 $t7
 do
     for corpus in tiger_spmrl negra dptb
     do
+    
+        (
         model="pretrained/${ts}/${corpus}"
         input="${data}/${corpus}/dev.raw"
         gold="${data}/${corpus}/dev.discbracket"
@@ -32,7 +34,9 @@ do
         ./bin/mtg2_parser -m ${model} -F 1 -b 1 -x ${input} -o ${pred}
         discodop eval ${gold} ${pred} --fmt=discbracket experiments/proper.prm > ${pred}_eval
         discodop eval ${gold} ${pred} --fmt=discbracket experiments/proper.prm --disconly > ${pred}_eval_disconly
+        ) &
     done
+    wait
 done
 
 

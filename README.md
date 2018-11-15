@@ -83,8 +83,8 @@ However, with this execution mode, the parser will only output constituency tree
 ### Example with a discontinuous parse
 
 ```bash
-$ echo "What else did they think would happen ?" | ./mtg2_parser -m ../pretrained_models_disco/ml_gap/dptb/ -b 1
-(ROOT (SBARQ (SQ (VP (S (VP (WHNP (WP 0=What) (RB 1=else)) (VP (MD 5=would) (VP (VB 6=happen))))) (VB 4=think)) (VBD 2=did) (NP (PRP 3=they))) (. 7=?)))
+$ echo "Which cat are you referring to ?" | ./mtg2_parser -m ../pretrained/ml_gap_unlex_eager_oracle/dptb/ -b 1
+(ROOT (SBARQ (SQ (VP (PP (WHNP (WDT 0=Which) (NN 1=cat)) (TO 5=to)) (VBG 4=referring)) (VBP 2=are) (NP (PRP 3=you))) (. 6=?)))
 ```
 
 ![](./english.png)
