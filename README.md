@@ -37,6 +37,9 @@ of `wchar_t`, which will confuse the character bi-lstm.
 Pretrained models whose results are presented in the paper (Table 4) are in the `pretrained` folder.
 
 Use `sh reparse.sh <path to data folder multilingual_disco_data/data>` to reparse the development set with each model.
+The scripts to preprocess and generate the data in the parser input format are in the following repository: 
+[https://github.com/mcoavoux/multilingual_disco_data](https://github.com/mcoavoux/multilingual_disco_data).
+
 
 
 ### Parse a bunch of files
