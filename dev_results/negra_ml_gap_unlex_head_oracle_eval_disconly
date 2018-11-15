@@ -1,0 +1,104 @@
+
+ Rewrite rule mismatches (for given span)
+   count   cand / gold rules
+       8  0	ROOT S
+          012	CS S KON S
+       6  0	ROOT S
+          01	CS S S
+       6  012	NP NP KON NP
+          012	CNP NP KON NP
+       6  0123	ROOT NE NP NE NE
+          012	ROOT NE NP CNP
+       4  01	PP APPR NE
+          01	PP APPR NN
+       4  012	S S KON S
+          012	CS S KON S
+       4  01	NP ART NN
+          01	NP ART NE
+       4  01	PP APPR NN
+          01	PP APPR NE
+       3  012	PP APPR ART NN
+          012	PP APPR ART NE
+       3  012	NP ART NN NP
+          0123	NP ART NN NP PP
+
+ Rewrite rules (span not in gold trees)
+   count   rule in candidate parses
+      40  01	NP ART NN
+      26  012	NP ART NN PP
+      15  01	PP APPR NN
+      14  01	NP NP PP
+      13  012	PP APPR ART NN
+      13  01	NP ADJA NN
+      12  012	NP ART ADJA NN
+      11  01	VP VP VAINF
+      11  01	VP PP VVPP
+      10  012	NP ART NN NP
+
+ Rewrite rules (span missing from candidate parses)
+   count   rule in gold standard set
+      43  01	NP ART NN
+      27  012	NP ART NN PP
+      17  01	NP NN PP
+      16  01	PP APPR NN
+      15  012	NP ART NN NP
+      14  012	CNP NP KON NP
+      14  01	NP ADJA NN
+      12  012	NP ART ADJA NN
+      11  012	PP APPR NN PP
+      11  012	PP APPR ART NN
+
+ Attachment errors (correct labeled bracketing, wrong parent)
+  label     cand     gold    count
+ _________________________________
+     NP       NP        S        3
+     VP       VP      CVP        2
+     NP        S       VP        1
+    AVP      AVP       AP        1
+     VP      CVP        S        1
+     PP       PP        S        1
+     VP       VP        S        1
+     PP       VP       NP        1
+     PP        S       NP        1
+     VP       CS        S        1
+
+ Category Statistics (10 most frequent categories / errors)
+  label  % gold  recall    prec.     F1           cand gold       count
+ ______________________________________        ________________________
+     VP   57.58   59.21   54.88   56.96             VP CVP            2
+     NP   18.69   37.84   57.14   45.53             NP S              1
+     PP    8.08   56.25   75.00   64.29             VP AP             1
+     AP    5.81   39.13   90.00   54.55            AVP S              1
+    AVP    3.54   50.00   53.85   51.85            AVP AP             1
+      S    3.28    7.69   50.00   13.33             NP VP             1
+    CVP    1.26   40.00   25.00   30.77
+     CS    0.76   66.67  100.00   80.00
+    CNP    0.76    0.00    0.00     nan
+    CPP    0.25    0.00     nan     nan
+
+ POS Statistics (10 most frequent tags / errors)
+    tag  % gold  recall   prec.      F1           cand gold   count
+ ______________________________________            ____________________
+     NN   25.13   99.07   97.55   98.31             NN NE            82
+    ART   13.40   99.80   99.46   99.63             NE NN            23
+   APPR   10.15   99.61   99.28   99.44            ADV PIAT           8
+   ADJA    7.16   97.96   98.23   98.10           VVPP VVINF          8
+     NE    6.71   90.79   95.62   93.14           VVPP ADJD           8
+    ADV    4.47   97.47   96.76   97.11          VVFIN VVPP           7
+  VVFIN    4.11   97.58   97.73   97.66           ADJD ADJA           6
+  VAFIN    3.31  100.00  100.00  100.00             NE XY             6
+   VVPP    2.58   96.40   94.70   95.54           ADJA NN             5
+    KON    2.41   99.17  100.00   99.59          VVINF VVFIN          5
+
+_________ Summary _________ <= 40 ______ ALL
+number of sentences:          287        305
+longest sentence:              40         62
+gold brackets:                362        396
+cand. brackets:               325        346
+disc. gold brackets:          362        396
+disc. cand. brackets:         334        355
+labeled recall:             52.76      51.01
+labeled precision:          57.19      56.90
+labeled f-measure:          54.89      53.79
+exact match:                38.68      38.03
+pos accuracy:               97.84      97.82

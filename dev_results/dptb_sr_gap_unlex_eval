@@ -1,0 +1,104 @@
+
+ Rewrite rule mismatches (for given span)
+   count   cand / gold rules
+      31  012	S NP ADVP VP
+          01	S NP VP
+      20  01	VP VBD NP
+          012	VP VBD NP PP
+      18  012	NP NP PP PP
+          01	NP NP PP
+      18  01	VP VB NP
+          012	VP VB NP PP
+      17  01	NP NNP NNPS
+          01	NP NNP NNP
+      17  01	NP NP PP
+          012	NP NP PP PP
+      15  01	QP IN CD
+          01	QP RB CD
+      14  012	VP VBD NP PP
+          01	VP VBD NP
+      14  012	NP DT NN NN
+          012	NP DT JJ NN
+      14  012	VP VB NP PP
+          01	VP VB NP
+
+ Rewrite rules (span not in gold trees)
+   count   rule in candidate parses
+     295  01	PP IN NP
+     233  01	NP NP PP
+      95  01	S NP VP
+      69  0	S VP
+      54  01	NP NP SBAR
+      53  0	SBAR S
+      48  01	VP TO VP
+      35  01	NP NP NP
+      30  012	NP NP CC NP
+      25  01	PP TO NP
+
+ Rewrite rules (span missing from candidate parses)
+   count   rule in gold standard set
+     283  01	PP IN NP
+     223  01	NP NP PP
+      95  01	S NP VP
+      63  0	S VP
+      60  0	SBAR S
+      47  01	VP TO VP
+      39  01	NP NP NP
+      37  01	NP NP SBAR
+      35  012	NP NP CC NP
+      31  01	NP NP VP
+
+ Attachment errors (correct labeled bracketing, wrong parent)
+  label     cand     gold    count
+ _________________________________
+     NP       PP       NP      141
+     PP       VP       NP      115
+     NP       NP       PP      114
+     NP       VP       NP      106
+     PP       NP       VP      100
+     NP       NP       VP       97
+     NP        S       NP       61
+   ADVP        S       VP       57
+     NP       NP        S       48
+     VP       VP        S       31
+
+ Category Statistics (10 most frequent categories / errors)
+  label  % gold  recall    prec.     F1           cand gold       count
+ ______________________________________        ________________________
+     NP   42.68   93.54   93.35   93.45             NP S             31
+     VP   18.99   90.48   90.62   90.55           ADVP ADJP          23
+      S   12.70   91.23   91.18   91.21           ADJP NP            21
+     PP   12.69   89.60   89.21   89.41              S NP            20
+   SBAR    3.83   88.26   89.17   88.71             VP NP            19
+   ADVP    3.29   87.52   83.63   85.53           ADVP NP            16
+   ADJP    1.93   76.90   74.88   75.87             NP VP            15
+     QP    1.53   91.91   91.91   91.91             NP ADJP          15
+   WHNP    0.95   96.59   97.59   97.08           ADJP VP            15
+   SINV    0.33   82.35   94.38   87.96              S SINV          13
+
+ POS Statistics (10 most frequent tags / errors)
+    tag  % gold  recall   prec.      F1           cand gold   count
+ ______________________________________            ____________________
+     NN   16.31   96.61   96.53   96.57             JJ NN            97
+    NNP   11.52   95.72   98.25   96.97             NN JJ            96
+     IN   11.47   99.11   97.39   98.24           NNPS NNP           89
+     DT   10.01   99.00   99.86   99.43             IN RB            65
+    NNS    7.14   98.56   99.00   98.78             JJ VBN           63
+     JJ    7.04   92.52   90.86   91.68            VBN VBD           58
+     CD    5.26   99.40   99.40   99.40             NN VBG           43
+    VBD    4.86   96.13   97.39   96.75            VBD VBN           41
+     RB    3.73   91.59   92.58   92.08             RB JJ            33
+     VB    2.80   95.93   97.72   96.82            VBG NN            28
+
+_________ Summary _________ <= 40 ______ ALL
+number of sentences:         1578       1700
+longest sentence:              40        118
+gold brackets:              26384      30703
+cand. brackets:             26355      30692
+disc. gold brackets:          405        446
+disc. cand. brackets:         329        369
+labeled recall:             91.47      91.04
+labeled precision:          91.54      91.03
+labeled f-measure:          91.50      91.03
+exact match:                42.21      39.47
+pos accuracy:               96.70      96.70

@@ -1,0 +1,98 @@
+
+ Rewrite rule mismatches (for given span)
+   count   cand / gold rules
+      31  012	S NP PRT VP
+          01	S NP VP
+      20  01	VP VBD NP
+          012	VP VBD NP PP
+      18  012	NP NP PP PP
+          01	NP NP PP
+      18  01	VP VB NP
+          012	VP VB NP PP
+      17  01	NP NNP NNPS
+          01	NP NNP NNP
+      17  01	NP NP PP
+          012	NP NP PP PP
+      15  01	QP IN CD
+          01	QP RB CD
+      14  012	VP VBD NP PP
+          01	VP VBD NP
+      14  012	NP DT NN NN
+          012	NP DT JJ NN
+      14  012	VP VB NP PP
+          01	VP VB NP
+
+ Rewrite rules (span not in gold trees)
+   count   rule in candidate parses
+     295  01	PP IN NP
+     233  01	NP NP PP
+      95  01	S NP VP
+      69  0	S VP
+      54  01	NP NP SBAR
+      53  0	SBAR S
+      48  01	VP TO VP
+      35  01	NP NP NP
+      30  012	NP NP CC NP
+      25  01	PP TO NP
+
+ Rewrite rules (span missing from candidate parses)
+   count   rule in gold standard set
+     283  01	PP IN NP
+     223  01	NP NP PP
+      95  01	S NP VP
+      63  0	S VP
+      60  0	SBAR S
+      47  01	VP TO VP
+      39  01	NP NP NP
+      37  01	NP NP SBAR
+      35  012	NP NP CC NP
+      31  01	NP NP VP
+
+ Attachment errors (correct labeled bracketing, wrong parent)
+  label     cand     gold    count
+ _________________________________
+     VP        S     SINV        3
+      S     SBAR       VP        2
+     NP       VP       NP        1
+      S       VP     SBAR        1
+
+ Category Statistics (10 most frequent categories / errors)
+  label  % gold  recall    prec.     F1           cand gold       count
+ ______________________________________        ________________________
+     VP   71.08   76.66   85.56   80.87             VP S              1
+     NP   12.33   21.82   60.00   32.00              S SINV           1
+      S    8.30   64.86   66.67   65.75
+   SBAR    4.93   72.73   64.00   68.09
+     PP    1.12   20.00  100.00   33.33
+   ADJP    1.12   20.00  100.00   33.33
+    PRT    0.45    0.00     nan     nan
+   SINV    0.22    0.00     nan     nan
+   FRAG    0.22    0.00     nan     nan
+     NX    0.22    0.00     nan     nan
+
+ POS Statistics (10 most frequent tags / errors)
+    tag  % gold  recall   prec.      F1           cand gold   count
+ ______________________________________            ____________________
+     NN   16.31   96.61   96.53   96.57             JJ NN            97
+    NNP   11.52   95.72   98.25   96.97             NN JJ            96
+     IN   11.47   99.11   97.39   98.24           NNPS NNP           89
+     DT   10.01   99.00   99.86   99.43             IN RB            65
+    NNS    7.14   98.56   99.00   98.78             JJ VBN           63
+     JJ    7.04   92.52   90.86   91.68            VBN VBD           58
+     CD    5.26   99.40   99.40   99.40             NN VBG           43
+    VBD    4.86   96.13   97.39   96.75            VBD VBN           41
+     RB    3.73   91.59   92.58   92.08             RB JJ            33
+     VB    2.80   95.93   97.72   96.82            VBG NN            28
+
+_________ Summary _________ <= 40 ______ ALL
+number of sentences:          248        280
+longest sentence:              40        118
+gold brackets:                405        446
+cand. brackets:               329        369
+disc. gold brackets:          405        446
+disc. cand. brackets:         329        369
+labeled recall:             66.91      66.59
+labeled precision:          82.37      80.49
+labeled f-measure:          73.84      72.88
+exact match:                61.69      58.93
+pos accuracy:               96.70      96.70

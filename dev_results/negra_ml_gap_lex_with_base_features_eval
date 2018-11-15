@@ -1,0 +1,104 @@
+
+ Rewrite rule mismatches (for given span)
+   count   cand / gold rules
+       9  01	PP APPR NN
+          01	PP APPR NE
+       8  01	PP APPR NE
+          01	PP APPR NN
+       5  0	ROOT S
+          01	CS S S
+       5  0123	ROOT NE NP NE NE
+          012	ROOT NE NP CNP
+       4  0	ROOT S
+          012	CS S KON S
+       4  012	NP ART NN NE
+          01	NP ART MPN
+       4  01	NP ART NN
+          01	NP ART NE
+       4  0123	NP ART NN NP PP
+          012	NP ART NN NP
+       4  012	VP NP PP VVPP
+          01	VP NP VVPP
+       4  01234	PP APPR ART NN NP PP
+          0123	PP APPR ART NN NP
+
+ Rewrite rules (span not in gold trees)
+   count   rule in candidate parses
+      47  01	NP ART NN
+      30  012	NP ART NN PP
+      17  01	PP APPR NN
+      15  012	NP ART ADJA NN
+      13  012	PP APPR ART NN
+      13  012	NP ART NN NP
+      13  012	PP APPR NN PP
+      11  012	CNP NP KON NP
+      11  01	NP ADJA NN
+      11  0123	PP APPR ART NN PP
+
+ Rewrite rules (span missing from candidate parses)
+   count   rule in gold standard set
+      37  01	NP ART NN
+      28  012	NP ART NN PP
+      21  01	PP APPR NN
+      16  01	MPN NE NE
+      16  012	NP ART NN NP
+      15  01	NP NN PP
+      13  012	CNP NP KON NP
+      13  012	NP ART ADJA NN
+      12  01	NP ADJA NN
+      12  0123	NP ART ADJA NN PP
+
+ Attachment errors (correct labeled bracketing, wrong parent)
+  label     cand     gold    count
+ _________________________________
+     PP       VP       NP       34
+     PP       NP        S       33
+     PP       PP        S       28
+     PP        S       NP       27
+     NP       NP        S       24
+     NP       VP        S       23
+     NP       NP      CNP       19
+     NP     ROOT        S       17
+     PP        S       VP       17
+     NP        S       VP       17
+
+ Category Statistics (10 most frequent categories / errors)
+  label  % gold  recall    prec.     F1           cand gold       count
+ ______________________________________        ________________________
+     NP   30.09   82.62   81.83   82.23             CS S             22
+     PP   26.03   87.55   84.97   86.24              S CS            15
+      S   18.51   87.90   90.28   89.07             NP S             15
+     VP   10.24   66.58   66.94   66.76             NP CNP           11
+     AP    4.10   76.61   80.71   78.61              S VP            10
+    CNP    3.31   73.53   76.75   75.11             PP S              8
+    MPN    2.43   87.43   91.62   89.47              S NP             8
+     VZ    1.21   98.85   96.63   97.73            CNP NP             8
+     CS    0.97   57.14   57.97   57.55             VP CVP            6
+    AVP    0.90   63.08   67.21   65.08             NP PP             6
+
+ POS Statistics (10 most frequent tags / errors)
+    tag  % gold  recall   prec.      F1           cand gold   count
+ ______________________________________            ____________________
+     NN   25.13   98.65   97.21   97.93             NN NE            94
+    ART   13.40   99.60   99.36   99.48             NE NN            37
+   APPR   10.15   99.54   99.28   99.41           ADJA NN            11
+   ADJA    7.16   98.52   97.52   98.02           ADJD ADV            8
+     NE    6.71   89.80   94.38   92.03           VVPP ADJD           8
+    ADV    4.47   96.58   96.30   96.44           VVPP VVINF          8
+  VVFIN    4.11   98.55   97.44   97.99             NE XY             8
+  VAFIN    3.31  100.00  100.00  100.00          VVFIN VVPP           7
+   VVPP    2.58   95.37   94.64   95.01            ADV PIAT           7
+    KON    2.41   99.17  100.00   99.59            ART PRELS          6
+
+_________ Summary _________ <= 40 ______ ALL
+number of sentences:          975       1000
+longest sentence:              40         62
+gold brackets:               6729       7191
+cand. brackets:              6695       7154
+disc. gold brackets:          362        396
+disc. cand. brackets:         348        375
+labeled recall:             82.78      82.23
+labeled precision:          83.04      82.49
+labeled f-measure:          82.91      82.36
+exact match:                45.74      44.70
+pos accuracy:               97.57      97.56
