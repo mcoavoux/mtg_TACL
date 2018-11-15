@@ -3,6 +3,11 @@
 
 Multilingual discontinuous constituency parsing.
 
+This is the version of the Mind-the-Gap parser used in the following forthcoming article:
+
+    Unlexicalized Transition-based Discontinuous Constituency Parsing
+    Maximin Coavoux, Benoît Crabbé, Shay B. Cohen
+
 # Compile
 
 Download headers for Eigen and Boost:
@@ -36,8 +41,6 @@ Use `sh reparse.sh <path to data folder multilingual_disco_data/data>` to repars
 
 ### Parse a bunch of files
 
-
-
 Input data (for each file):
 
 - 1 sentence per line, tokens separated by spaces.
@@ -45,7 +48,7 @@ Input data (for each file):
 - parentheses must be replaced by `-LRB-` / `-RRB-`.
 
 
-Parse example:
+Parse example with a projective model:
 
 ```bash
 cd bin
@@ -72,15 +75,7 @@ analyses, but not dependency trees.
 
 ### Parse stdin
 
-You can also read stdin and output constituency trees to stdout:
-
-```bash
-echo "Le chat mange une pomme ." | ./mtg2_parser -m ../pretrained_models_projective/ml/FRENCH -b 1
-```
-
-However, with this execution mode, the parser will only output constituency trees.
-
-### Example with a discontinuous parse
+Example with a discontinuous English model:
 
 ```bash
 $ echo "Which cat are you referring to ?" | ./mtg2_parser -m ../pretrained/ml_gap_unlex_eager_oracle/dptb/ -b 1
