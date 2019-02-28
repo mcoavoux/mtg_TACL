@@ -5,8 +5,11 @@ Multilingual discontinuous constituency parsing.
 
 This is the version of the Mind-the-Gap parser used in the following forthcoming article:
 
-    Unlexicalized Transition-based Discontinuous Constituency Parsing
-    Maximin Coavoux, Benoît Crabbé, Shay B. Cohen
+**Unlexicalized Transition-based Discontinuous Constituency Parsing**  
+Maximin Coavoux, Benoît Crabbé, Shay B. Cohen  
+TACL (to appear)  
+[[preprint]](https://arxiv.org/abs/1902.08912)  
+
 
 # Compile
 
